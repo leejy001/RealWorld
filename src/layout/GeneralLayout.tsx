@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Container from "../components/Container";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
@@ -13,7 +14,7 @@ function GeneralLayout({ children, isSignIn }: GeneralLayoutProps) {
   return (
     <GeneralLayoutContainer>
       <Header />
-      {children}
+      <Container>{children}</Container>
       <Footer />
     </GeneralLayoutContainer>
   );
@@ -22,7 +23,9 @@ function GeneralLayout({ children, isSignIn }: GeneralLayoutProps) {
 export default GeneralLayout;
 
 const GeneralLayoutContainer = styled.div`
+  display: flex;
+  justify-content: center;
   margin-top: 56px;
-  height: 100vh;
+  height: calc(100vh - 122px);
   background-color: gray;
 `;

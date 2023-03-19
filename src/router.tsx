@@ -5,6 +5,7 @@ import Home from "./pages/home";
 import SignIn from "./pages/signin";
 import SignUp from "./pages/signup";
 import Article from "./pages/article";
+import Editor from "./pages/editor";
 
 interface RouterElement {
   id: number;
@@ -36,6 +37,12 @@ const routerData: RouterElement[] = [
     id: 3,
     path: "/article",
     element: <Article />,
+    withAuth: false
+  },
+  {
+    id: 4,
+    path: "/editor",
+    element: <Editor />,
     withAuth: false
   }
 ];

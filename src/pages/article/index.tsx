@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../components/Container";
 import ArticleAuthor from "./components/ArticleAuthor";

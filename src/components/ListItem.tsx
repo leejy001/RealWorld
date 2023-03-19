@@ -45,6 +45,7 @@ export default ListItem;
 const ListItemContainer = styled.li`
   padding: 24px 0px;
   cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const ListItemInfo = styled.div`

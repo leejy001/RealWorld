@@ -85,6 +85,7 @@ function Header() {
 export default Header;
 
 const HeaderContainer = styled.header`
+  z-index: 1000;
   display: flex;
   justify-content: center;
   position: fixed;

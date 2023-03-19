@@ -1,7 +1,9 @@
-import Home from "./pages/Home";
 import { createBrowserRouter } from "react-router-dom";
 import { Router as RemixRouter } from "@remix-run/router/dist/router";
 import GeneralLayout from "./layout/GeneralLayout";
+import Home from "./pages/home";
+import SignIn from "./pages/signin";
+import SignUp from "./pages/signup";
 
 interface RouterElement {
   id: number;
@@ -15,6 +17,18 @@ const routerData: RouterElement[] = [
     id: 0,
     path: "/",
     element: <Home />,
+    withAuth: false
+  },
+  {
+    id: 1,
+    path: "/sign-in",
+    element: <SignIn />,
+    withAuth: false
+  },
+  {
+    id: 2,
+    path: "/sign-up",
+    element: <SignUp />,
     withAuth: false
   }
 ];

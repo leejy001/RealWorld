@@ -22,6 +22,13 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     list-style-type: none;
   }
+
+  div, p {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    line-height: 1.1;
+  }
 `;
 
 export default GlobalStyle;

@@ -4,6 +4,7 @@ import GeneralLayout from "./layout/GeneralLayout";
 import Home from "./pages/home";
 import SignIn from "./pages/signin";
 import SignUp from "./pages/signup";
+import Article from "./pages/article";
 
 interface RouterElement {
   id: number;
@@ -29,6 +30,12 @@ const routerData: RouterElement[] = [
     id: 2,
     path: "/sign-up",
     element: <SignUp />,
+    withAuth: false
+  },
+  {
+    id: 3,
+    path: "/article",
+    element: <Article />,
     withAuth: false
   }
 ];

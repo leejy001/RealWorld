@@ -10,7 +10,6 @@ export default Container;
 const ResponsiveContainer = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 100%;
   @media (min-width: 544px) {
     max-width: 576px;
   }

@@ -26,7 +26,6 @@ const GlobalStyle = createGlobalStyle`
   div, p {
     margin: 0;
     padding: 0;
-    width: 100%;
     line-height: 1.1;
   }
 `;

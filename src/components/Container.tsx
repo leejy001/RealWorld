@@ -8,6 +8,7 @@ function Container({ children }: PropsWithChildren) {
 export default Container;
 
 const ResponsiveContainer = styled.div`
+  position: relative;
   margin: 0 auto;
   width: 100%;
   @media (min-width: 544px) {

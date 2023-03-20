@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 function ListItem() {
@@ -77,6 +76,7 @@ const ListItemDesc = styled.div`
   gap: 15px;
   div:nth-child(2) {
     display: flex;
+    justify-content: space-between;
   }
 `;
 

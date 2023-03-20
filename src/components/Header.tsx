@@ -66,7 +66,7 @@ function Header() {
               )
           )}
           {true && (
-            <HeaderUserProfile href={`/lee12345`}>
+            <HeaderUserProfile href={`/profile/lee12345`}>
               <img
                 src="https://api.realworld.io/images/smiley-cyrus.jpeg"
                 alt="user img"

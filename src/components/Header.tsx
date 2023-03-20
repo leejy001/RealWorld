@@ -99,6 +99,7 @@ const HeaderUserProfile = styled.div`
   display: flex;
   align-items: center;
   color: gray;
+  cursor: pointer;
   &:hover {
     color: black;
   }

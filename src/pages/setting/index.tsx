@@ -1,7 +1,16 @@
 import styled from "styled-components";
 import Container from "../../components/Container";
+import { useRouter } from "../../hooks/useRouter";
+import { removeAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
 
 function Setting() {
+  const { routeTo } = useRouter();
+
+  const SignOutClickHandler = () => {
+    removeAccessTokenFromSessionStorage();
+    routeTo("/");
+  };
+
   return (
     <Container>
       <SettingWrapper>
@@ -25,7 +34,7 @@ function Setting() {
           </UpdateButtonWrapper>
         </SettingsForm>
         <hr />
-        <SignOutButtonWrapper>
+        <SignOutButtonWrapper onClick={SignOutClickHandler}>
           <button>Or click here to logout.</button>
         </SignOutButtonWrapper>
       </SettingWrapper>

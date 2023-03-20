@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { getAccessTokenFromSessionStorage } from "./accessTokenHandler";
 
 export type PrivateRouteProps = {
   authenticationPath: string;
@@ -9,7 +10,7 @@ export default function ProtectedRoute({
   authenticationPath,
   outlet
 }: PrivateRouteProps) {
-  if (sessionStorage.getItem("accessToken")) {
+  if (getAccessTokenFromSessionStorage() !== null) {
     return outlet;
   }
   return <Navigate to={{ pathname: authenticationPath }} />;

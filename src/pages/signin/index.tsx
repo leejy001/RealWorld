@@ -28,9 +28,9 @@ function SignIn() {
     <Container>
       <SignInContianer>
         <p>Sign in</p>
-        <p>
-          <a href="/sign-up">Need an account?</a>
-        </p>
+        <SignUpButton onClick={() => routeTo("/sign-up")}>
+          Need an account?
+        </SignUpButton>
         <SignInForm onSubmit={SignInSubmitHandler}>
           <input
             type="email"
@@ -60,20 +60,18 @@ const SignInContianer = styled.div`
   padding-top: 30px;
   margin: 0 auto;
   text-align: center;
-  p:nth-child(1) {
+  p:first-child {
     font-size: 40px;
     margin-bottom: 8px;
   }
-  p:nth-child(2) {
-    a {
-      color: #5cb85c;
-    }
-    &:hover {
-      a {
-        text-decoration: underline;
-      }
-    }
-    margin-bottom: 16px;
+`;
+
+const SignUpButton = styled.div`
+  cursor: pointer;
+  color: #5cb85c;
+  margin-bottom: 16px;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 

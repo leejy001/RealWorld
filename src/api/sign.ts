@@ -2,11 +2,14 @@ import {
   SignRequest,
   SignInResult,
   SignInError,
-  UserResult
+  UserResult,
+  SignUpRequest,
+  SignUpError,
+  SignUpResult
 } from "../types/sign";
 import {
-  getAccessTokenFromLocalStorage,
-  saveAccessTokenToLocalStorage
+  getAccessTokenFromSessionStorage,
+  saveAccessTokenToSessionStorage
 } from "../utils/accessTokenHandler";
 
 export const signinApi = async (
@@ -23,17 +26,37 @@ export const signinApi = async (
     }
   );
 
-  const loginResponseData = await signInRes.json();
+  const signinResponseData = await signInRes.json();
 
   if (signInRes.ok) {
-    saveAccessTokenToLocalStorage(loginResponseData.user.token);
-    return { status: "success", ...loginResponseData };
+    saveAccessTokenToSessionStorage(signinResponseData.user.token);
+    return { status: "success", ...signinResponseData };
   }
-  return { status: "fail", ...loginResponseData };
+  return { status: "fail", ...signinResponseData };
+};
+
+export const signupApi = async (
+  args: SignUpRequest
+): Promise<SignUpResult | SignUpError> => {
+  const signUpRes = await fetch(`${process.env.REACT_APP_BASIC_URL}/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(args)
+  });
+
+  const signupResponseData = await signUpRes.json();
+
+  if (signUpRes.ok) {
+    saveAccessTokenToSessionStorage(signupResponseData.user.token);
+    return { status: "success", ...signupResponseData };
+  }
+  return { status: "fail", ...signupResponseData };
 };
 
 export const getUserInfoApi = async (): Promise<UserResult | null> => {
-  const token = getAccessTokenFromLocalStorage();
+  const token = getAccessTokenFromSessionStorage();
   const userInfoRes = await fetch(`${process.env.REACT_APP_BASIC_URL}/user`, {
     method: "GET",
     headers: {

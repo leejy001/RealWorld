@@ -9,11 +9,11 @@ import { getUserInfoApi } from "../api/sign";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { UserResult } from "../types/sign";
-import { getAccessTokenFromLocalStorage } from "../utils/accessTokenHandler";
+import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
 function GeneralLayout({ children }: PropsWithChildren) {
   const [userInfo, setUserInfo] = useState<UserResult | null>(null);
-  const token = getAccessTokenFromLocalStorage();
+  const token = getAccessTokenFromSessionStorage();
 
   const getUserInfo = useCallback(async () => {
     const userRes = await getUserInfoApi();

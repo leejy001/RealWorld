@@ -1,65 +1,86 @@
 import styled from "styled-components";
+import { signupApi } from "../../api/sign";
 import Container from "../../components/Container";
+import { useRouter } from "../../hooks/useRouter";
 
 function SignUp() {
+  const { routeTo } = useRouter();
+
+  const SignInSubmitHandler = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const signInResult = await signupApi({
+      user: {
+        username: formData.get("username") as string,
+        email: formData.get("email") as string,
+        password: formData.get("password") as string
+      }
+    });
+
+    if (signInResult.status === "fail") return;
+
+    routeTo("/");
+  };
+
   return (
     <Container>
-      <SignInContianer>
+      <SignUpContianer>
         <p>Sign up</p>
-        <p>
-          <a href="/sign-in">Have an account?</a>
-        </p>
-        <SignInForm>
+        <SignInButton onClick={() => routeTo("/sign-in")}>
+          Have an account?
+        </SignInButton>
+        <SignUpForm onSubmit={SignInSubmitHandler}>
           <input
             type="text"
+            name="username"
             placeholder="Username"
             autoComplete="false"
-            value=""
           />
           <input
             type="email"
+            name="email"
             placeholder="Email"
             autoComplete="false"
-            value=""
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             autoComplete="false"
-            value=""
           />
           <button>Sign up</button>
-        </SignInForm>
-      </SignInContianer>
+        </SignUpForm>
+      </SignUpContianer>
     </Container>
   );
 }
 
 export default SignUp;
 
-const SignInContianer = styled.div`
+const SignUpContianer = styled.div`
   width: 540px;
   padding-top: 30px;
   margin: 0 auto;
   text-align: center;
-  p:nth-child(1) {
+  p:first-child {
     font-size: 40px;
     margin-bottom: 8px;
   }
-  p:nth-child(2) {
-    a {
-      color: #5cb85c;
-    }
-    &:hover {
-      a {
-        text-decoration: underline;
-      }
-    }
-    margin-bottom: 16px;
+`;
+
+const SignInButton = styled.div`
+  cursor: pointer;
+  color: #5cb85c;
+  margin-bottom: 16px;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
-const SignInForm = styled.form`
+const SignUpForm = styled.form`
   display: flex;
   flex-direction: column;
   input {

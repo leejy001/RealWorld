@@ -1,18 +1,32 @@
-import React from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState
+} from "react";
 import styled from "styled-components";
+import { getUserInfoApi } from "../api/sign";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { UserResult } from "../types/sign";
+import { getAccessTokenFromLocalStorage } from "../utils/accessTokenHandler";
 
-interface GeneralLayoutProps {
-  children: React.ReactNode;
-  isSignIn: boolean;
-}
+function GeneralLayout({ children }: PropsWithChildren) {
+  const [userInfo, setUserInfo] = useState<UserResult | null>(null);
+  const token = getAccessTokenFromLocalStorage();
 
-function GeneralLayout({ children, isSignIn }: GeneralLayoutProps) {
-  if (isSignIn) return <div>SignIn first!!!</div>;
+  const getUserInfo = useCallback(async () => {
+    const userRes = await getUserInfoApi();
+    setUserInfo(userRes);
+  }, []);
+
+  useEffect(() => {
+    getUserInfo();
+  }, [getUserInfo, token]);
+
   return (
     <GeneralLayoutContainer>
-      <Header />
+      <Header userInfo={userInfo} />
       {children}
       <Footer />
     </GeneralLayoutContainer>

@@ -1,7 +1,29 @@
 import styled from "styled-components";
+import { signinApi } from "../../api/sign";
 import Container from "../../components/Container";
+import { useRouter } from "../../hooks/useRouter";
 
 function SignIn() {
+  const { routeTo } = useRouter();
+
+  const SignInSubmitHandler = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const signInResult = await signinApi({
+      user: {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string
+      }
+    });
+
+    if (signInResult.status === "fail") return;
+
+    routeTo("/");
+  };
+
   return (
     <Container>
       <SignInContianer>
@@ -9,20 +31,22 @@ function SignIn() {
         <p>
           <a href="/sign-up">Need an account?</a>
         </p>
-        <SignInForm>
+        <SignInForm onSubmit={SignInSubmitHandler}>
           <input
             type="email"
+            name="email"
             placeholder="Email"
             autoComplete="false"
-            value=""
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             autoComplete="false"
-            value=""
           />
-          <button>Sign in</button>
+          <button type="submit" value="Submit">
+            Sign in
+          </button>
         </SignInForm>
       </SignInContianer>
     </Container>

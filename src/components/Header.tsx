@@ -1,79 +1,48 @@
-import React from "react";
 import styled from "styled-components";
 import { Icon } from "@iconify/react";
 import Container from "./Container";
+import { useRouter } from "../hooks/useRouter";
+import { UserResult } from "../types/sign";
 
-const NavItem = [
-  {
-    id: 1,
-    path: "/",
-    label: "Home",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 2,
-    path: "/sign-in",
-    label: "Sign in",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 3,
-    path: "/sign-up",
-    label: "Sign up",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 4,
-    path: "/",
-    label: "Home",
-    image: null,
-    isAuth: true
-  },
-  {
-    id: 5,
-    path: "/editor",
-    label: "New Article",
-    image: <Icon icon="ion:compose" color="gray" />,
-    isAuth: true
-  },
-  {
-    id: 6,
-    path: "/setting",
-    label: "Setting",
-    image: <Icon icon="mdi:gear" color="gray" />,
-    isAuth: true
-  }
-];
+interface UserInfoProps {
+  userInfo: UserResult | null;
+}
 
-function Header() {
+function Header({ userInfo }: UserInfoProps) {
+  const { routeTo } = useRouter();
+
   return (
     <HeaderContainer>
       <Container>
-        <HeaderLogo href="/">conduit</HeaderLogo>
+        <HeaderLogo onClick={() => routeTo("/")}>conduit</HeaderLogo>
         <HeaderNavWrapper>
-          {NavItem.map(
-            (item) =>
-              item.isAuth && (
-                <li key={item.id}>
-                  <a href={item.path}>
-                    {item.image}
-                    &nbsp;{item.label}
-                  </a>
-                </li>
-              )
+          <li onClick={() => routeTo("/")}>Home</li>
+          {userInfo === null ? (
+            <>
+              <li onClick={() => routeTo("/sign-in")}>Sign in</li>
+              <li onClick={() => routeTo("/sign-up")}>Sign up</li>
+            </>
+          ) : (
+            <>
+              <li onClick={() => routeTo("/editor")}>
+                <Icon icon="ion:compose" color="gray" />
+                New Article
+              </li>
+              <li onClick={() => routeTo("/setting")}>
+                <Icon icon="mdi:gear" color="gray" />
+                Setting
+              </li>
+            </>
           )}
-          {true && (
-            <HeaderUserProfile href={`/profile/lee12345`}>
+          {userInfo && (
+            <HeaderUserProfile>
               <img
-                src="https://api.realworld.io/images/smiley-cyrus.jpeg"
+                src={userInfo.user.image}
                 alt="user img"
                 width="26"
                 height="26"
               />
-              <p>&nbsp;lee12345</p>
+              <p>&nbsp;{userInfo.user.username}</p>
             </HeaderUserProfile>
           )}
         </HeaderNavWrapper>
@@ -102,8 +71,8 @@ const HeaderContainer = styled.header`
   }
 `;
 
-const HeaderLogo = styled.a`
-  text-decoration: none;
+const HeaderLogo = styled.p`
+  cursor: pointer;
   color: #5cb85c;
   font-size: 24px;
   font-weight: 700;
@@ -114,19 +83,18 @@ const HeaderNavWrapper = styled.ul`
   align-items: center;
   gap: 10px;
   li {
-    a {
-      color: gray;
-      display: flex;
-      align-items: center;
-      font-size: 16px;
-      &:hover {
-        color: black;
-      }
+    cursor: pointer;
+    color: gray;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    &:hover {
+      color: black;
     }
   }
 `;
 
-const HeaderUserProfile = styled.a`
+const HeaderUserProfile = styled.div`
   margin-left: 10px;
   display: flex;
   align-items: center;

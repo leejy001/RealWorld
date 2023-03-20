@@ -56,7 +56,7 @@ function Header() {
         <HeaderNavWrapper>
           {NavItem.map(
             (item) =>
-              !item.isAuth && (
+              item.isAuth && (
                 <li key={item.id}>
                   <a href={item.path}>
                     {item.image}
@@ -65,8 +65,8 @@ function Header() {
                 </li>
               )
           )}
-          {false && (
-            <HeaderUserProfile href={`/lee12345`}>
+          {true && (
+            <HeaderUserProfile href={`/profile/lee12345`}>
               <img
                 src="https://api.realworld.io/images/smiley-cyrus.jpeg"
                 alt="user img"
@@ -85,7 +85,9 @@ function Header() {
 export default Header;
 
 const HeaderContainer = styled.header`
+  z-index: 1000;
   display: flex;
+  align-items: center;
   justify-content: center;
   position: fixed;
   top: 0;

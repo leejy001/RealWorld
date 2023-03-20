@@ -8,10 +8,8 @@ function Container({ children }: PropsWithChildren) {
 export default Container;
 
 const ResponsiveContainer = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  position: relative;
+  margin: 0 auto;
   width: 100%;
   @media (min-width: 544px) {
     max-width: 576px;

@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  body {
+  *, body {
     margin: 0;
     font-family: 'Titillium Web', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -21,6 +21,12 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     list-style-type: none;
+  }
+
+  div, p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
   }
 `;
 

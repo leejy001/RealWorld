@@ -6,7 +6,7 @@ import { useRouter } from "../../hooks/useRouter";
 function SignIn() {
   const { routeTo } = useRouter();
 
-  const SignInSubmitHandler = async (
+  const signInSubmitHandler = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
@@ -31,7 +31,7 @@ function SignIn() {
         <SignUpButton onClick={() => routeTo("/sign-up")}>
           Need an account?
         </SignUpButton>
-        <SignInForm onSubmit={SignInSubmitHandler}>
+        <SignInForm onSubmit={signInSubmitHandler}>
           <input
             type="email"
             name="email"

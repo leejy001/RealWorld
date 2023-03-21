@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Icon } from "@iconify/react";
 import Container from "./Container";
 import { useRouter } from "../hooks/useRouter";
-import { UserResult } from "../types/sign";
+import { UserResult } from "../types/user";
 
 interface UserInfoProps {
   userInfo: UserResult | null;

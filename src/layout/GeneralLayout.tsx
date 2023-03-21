@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { getUserInfoApi } from "../api/user";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { UserResult } from "../types/sign";
+import { UserResult } from "../types/user";
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
 function GeneralLayout({ children }: PropsWithChildren) {

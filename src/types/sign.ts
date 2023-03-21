@@ -1,3 +1,5 @@
+import { UserInfo } from "./user";
+
 export interface SignRequest {
   user: {
     email: string;
@@ -39,16 +41,4 @@ export interface SignUpError {
     username?: string[];
     password?: string[];
   };
-}
-
-export interface UserInfo {
-  email: "string";
-  token: "string";
-  username: "string";
-  bio: "string";
-  image: "string";
-}
-
-export interface UserResult {
-  user: UserInfo;
 }

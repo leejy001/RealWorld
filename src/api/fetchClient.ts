@@ -8,7 +8,7 @@ export const fetchClient = async (
   const newOptions = {
     ...options,
     headers: {
-      ...options.headers,
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`
     }
   };

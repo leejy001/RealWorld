@@ -1,41 +1,98 @@
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { getUserInfoApi, putUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
+import { UserResult } from "../../types/user";
 import { removeAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
 
 function Setting() {
   const { routeTo } = useRouter();
+  const [userInfo, setUserInfo] = useState<UserResult | null>(null);
 
-  const SignOutClickHandler = () => {
+  const signOutClickHandler = () => {
     removeAccessTokenFromSessionStorage();
     routeTo("/");
   };
+
+  const getUserInfo = useCallback(async () => {
+    const userRes = await getUserInfoApi();
+    setUserInfo(userRes);
+  }, []);
+
+  const userInfoSubmitHandler = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const userInfoResult = await putUserInfoApi({
+      user: {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        username: formData.get("username") as string,
+        bio: formData.get("bio") as string,
+        image: formData.get("image") as string
+      }
+    });
+
+    if (userInfoResult === null) return;
+
+    routeTo("/");
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, [getUserInfo]);
 
   return (
     <Container>
       <SettingWrapper>
         <SettingTitle>Your Settings</SettingTitle>
-        <SettingsForm>
+        <SettingsForm onSubmit={userInfoSubmitHandler}>
           <input
             type="text"
+            name="image"
             placeholder="URL of profile picture"
             autoComplete="false"
+            defaultValue={userInfo?.user.image}
           />
-          <input type="text" placeholder="Username" autoComplete="false" />
-          <textarea placeholder="Short bio about you" />
-          <input type="email" placeholder="Email" autoComplete="false" />
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            autoComplete="false"
+            defaultValue={userInfo?.user.username}
+          />
+          <textarea
+            name="bio"
+            placeholder="Short bio about you"
+            defaultValue={userInfo?.user.bio}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            autoComplete="false"
+            defaultValue={userInfo?.user.email}
+          />
           <input
             type="password"
+            name="password"
             placeholder="New Password"
             autoComplete="false"
           />
           <UpdateButtonWrapper>
-            <button>Update Settings</button>
+            <button type="submit" value="Submit">
+              Update Settings
+            </button>
           </UpdateButtonWrapper>
         </SettingsForm>
         <hr />
-        <SignOutButtonWrapper onClick={SignOutClickHandler}>
-          <button>Or click here to logout.</button>
+        <SignOutButtonWrapper>
+          <button onClick={signOutClickHandler}>
+            Or click here to logout.
+          </button>
         </SignOutButtonWrapper>
       </SettingWrapper>
     </Container>

@@ -6,13 +6,13 @@ import { useRouter } from "../../hooks/useRouter";
 function SignUp() {
   const { routeTo } = useRouter();
 
-  const SignInSubmitHandler = async (
+  const signUpSubmitHandler = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const signInResult = await signupApi({
+    const signUpResult = await signupApi({
       user: {
         username: formData.get("username") as string,
         email: formData.get("email") as string,
@@ -20,7 +20,7 @@ function SignUp() {
       }
     });
 
-    if (signInResult.status === "fail") return;
+    if (signUpResult.status === "fail") return;
 
     routeTo("/");
   };
@@ -32,7 +32,7 @@ function SignUp() {
         <SignInButton onClick={() => routeTo("/sign-in")}>
           Have an account?
         </SignInButton>
-        <SignUpForm onSubmit={SignInSubmitHandler}>
+        <SignUpForm onSubmit={signUpSubmitHandler}>
           <input
             type="text"
             name="username"
@@ -51,7 +51,9 @@ function SignUp() {
             placeholder="Password"
             autoComplete="false"
           />
-          <button>Sign up</button>
+          <button type="submit" value="Submit">
+            Sign up
+          </button>
         </SignUpForm>
       </SignUpContianer>
     </Container>

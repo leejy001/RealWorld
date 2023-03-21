@@ -5,7 +5,7 @@ import React, {
   useState
 } from "react";
 import styled from "styled-components";
-import { getUserInfoApi } from "../api/sign";
+import { getUserInfoApi } from "../api/user";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { UserResult } from "../types/sign";

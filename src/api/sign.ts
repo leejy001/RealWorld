@@ -2,15 +2,11 @@ import {
   SignRequest,
   SignInResult,
   SignInError,
-  UserResult,
   SignUpRequest,
   SignUpError,
   SignUpResult
 } from "../types/sign";
-import {
-  getAccessTokenFromSessionStorage,
-  saveAccessTokenToSessionStorage
-} from "../utils/accessTokenHandler";
+import { saveAccessTokenToSessionStorage } from "../utils/accessTokenHandler";
 
 export const signinApi = async (
   args: SignRequest
@@ -53,21 +49,4 @@ export const signupApi = async (
     return { status: "success", ...signupResponseData };
   }
   return { status: "fail", ...signupResponseData };
-};
-
-export const getUserInfoApi = async (): Promise<UserResult | null> => {
-  const token = getAccessTokenFromSessionStorage();
-  const userInfoRes = await fetch(`${process.env.REACT_APP_BASIC_URL}/user`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  if (userInfoRes.ok) {
-    return userInfoRes.json() as Promise<UserResult>;
-  }
-
-  return null;
 };

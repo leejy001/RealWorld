@@ -1,37 +1,62 @@
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  getGlobalArticleInfoApi,
+  getMyArticleInfoApi
+} from "../../../api/article";
 import ListItem from "../../../components/ListItem";
+import { ArticleInfo } from "../../../types/article";
+import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
-function FeedList() {
-  const [feed, setFeed] = useState("feed");
+interface TagProps {
+  tag: string;
+  setTag: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function FeedList({ tag, setTag }: TagProps) {
+  const [articles, setArticles] = useState<ArticleInfo[]>([]);
+
+  const getArticleInfo = useCallback(async () => {
+    console.log(tag);
+    if (tag === "my") {
+      const result = await getMyArticleInfoApi({ limit: 10, offset: 0 });
+      if (result?.articles) setArticles(result?.articles);
+      else setArticles([]);
+    } else {
+      const result = await getGlobalArticleInfoApi({ limit: 10, offset: 0 });
+      if (result?.articles) setArticles(result?.articles);
+    }
+  }, [tag]);
+
+  useEffect(() => {
+    getArticleInfo();
+  }, [getArticleInfo]);
+
   return (
     <FeedListContainer>
       <FeedListNav>
-        {false && (
+        {getAccessTokenFromSessionStorage() && (
           <li
-            className={feed === "my" ? "active" : ""}
-            onClick={() => setFeed("my")}
+            className={tag === "my" ? "active" : ""}
+            onClick={() => setTag("my")}
           >
             Your Feed
           </li>
         )}
-        <li
-          className={feed === "global" ? "active" : ""}
-          onClick={() => setFeed("global")}
-        >
+        <li className={tag === "" ? "active" : ""} onClick={() => setTag("")}>
           Global Feed
         </li>
-        {feed !== "my" && feed !== "global" && (
+        {tag !== "my" && tag !== "" && (
           <li className="active">
             <Icon icon="mdi:pound" color="#5cb85c" />
-            &nbsp;{feed}
+            &nbsp;{tag}
           </li>
         )}
       </FeedListNav>
       <FeedListWrapper>
-        {[1, 2, 3, 4, 5].map((item) => (
-          <ListItem key={item} />
+        {articles.map((item) => (
+          <ListItem key={item.slug} article={item} />
         ))}
       </FeedListWrapper>
     </FeedListContainer>

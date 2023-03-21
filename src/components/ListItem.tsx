@@ -1,38 +1,34 @@
 import styled from "styled-components";
+import { ArticleInfo } from "../types/article";
 
-function ListItem() {
+interface ArticleProps {
+  article: ArticleInfo;
+}
+
+function ListItem({ article }: ArticleProps) {
   return (
     <ListItemContainer>
       <ListItemInfo>
-        <img
-          src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-          alt="user img"
-          width="32"
-          height="32"
-        />
+        <img src={article.author.image} alt="user img" width="32" height="32" />
         <div>
-          <p>lee12345</p>
+          <p>{article.author.username}</p>
           <p>March 17, 2023</p>
         </div>
       </ListItemInfo>
       <ListItemDesc>
         <div>
-          <ListItemTitle>
-            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-            consectetur, adipisci velit...
-          </ListItemTitle>
-          <ListItemSubTitle>
-            There is no one who loves pain itself, who seeks after it and wants
-            to have it, simply because it is pain...
-          </ListItemSubTitle>
+          <ListItemTitle>{article.title}</ListItemTitle>
+          <ListItemSubTitle>{article.description}</ListItemSubTitle>
         </div>
         <div>
           <ReadMore>Read more...</ReadMore>
-          <ListItemTagList>
-            {[1, 2, 3].map((item) => (
-              <li key={item}>tagtag</li>
-            ))}
-          </ListItemTagList>
+          {article.tagList.length > 0 && (
+            <ListItemTagList>
+              {article.tagList.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ListItemTagList>
+          )}
         </div>
       </ListItemDesc>
     </ListItemContainer>

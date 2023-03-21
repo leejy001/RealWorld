@@ -1,15 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { getTagApi } from "../../../api/tag";
-import { TagResult } from "../../../types/tag";
 
-function TagBar() {
-  const [tags, setTags] = useState<TagResult | null>(null);
+interface TagProps {
+  setTag: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function TagBar({ setTag }: TagProps) {
+  const [tags, setTags] = useState<string[]>([]);
 
   const getTagsInfo = useCallback(async () => {
     const result = await getTagApi();
-    setTags(result);
+    if (result?.tags) setTags(result?.tags);
   }, []);
+
+  const tagClickHandler = (tag: string) => {
+    setTag(tag);
+  };
 
   useEffect(() => {
     getTagsInfo();
@@ -20,10 +27,12 @@ function TagBar() {
       <TagBarWrapper>
         <p>Popular Tags</p>
         <TagListWrapper>
-          {tags ? (
+          {tags.length > 0 ? (
             <>
-              {tags.tags.map((item, index) => (
-                <li key={index}>{item}</li>
+              {tags.map((item, index) => (
+                <li key={index} onClick={() => tagClickHandler(item)}>
+                  {item}
+                </li>
               ))}
             </>
           ) : (

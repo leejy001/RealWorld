@@ -17,9 +17,9 @@ function ArticleList() {
         </ArticleNavItem>
       </ArticleNavWrapper>
       <ArticleListWrapper>
-        {[1, 2, 3, 4].map((item) => (
+        {/* {[1, 2, 3, 4].map((item) => (
           <ListItem key={item} />
-        ))}
+        ))} */}
       </ArticleListWrapper>
     </ArticleListContainer>
   );

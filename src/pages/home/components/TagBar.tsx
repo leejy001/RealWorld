@@ -1,16 +1,34 @@
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-
-const tagList = ["banana", "apple", "orange", "pineapple", "peach"];
+import { getTagApi } from "../../../api/tag";
+import { TagResult } from "../../../types/tag";
 
 function TagBar() {
+  const [tags, setTags] = useState<TagResult | null>(null);
+
+  const getTagsInfo = useCallback(async () => {
+    const result = await getTagApi();
+    setTags(result);
+  }, []);
+
+  useEffect(() => {
+    getTagsInfo();
+  }, [getTagsInfo]);
+
   return (
     <TagBarContainer>
       <TagBarWrapper>
         <p>Popular Tags</p>
         <TagListWrapper>
-          {tagList.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
+          {tags ? (
+            <>
+              {tags.tags.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </>
+          ) : (
+            <p>loading...</p>
+          )}
         </TagListWrapper>
       </TagBarWrapper>
     </TagBarContainer>

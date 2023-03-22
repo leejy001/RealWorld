@@ -24,3 +24,13 @@ export interface ArticlesResult {
 export interface ArticleResult {
   article: ArticleInfo;
 }
+
+export interface PutArticleRequest {
+  title: string;
+  description: string;
+  body: string;
+}
+
+export interface PostArticleRequest extends PutArticleRequest {
+  tagList: string[];
+}

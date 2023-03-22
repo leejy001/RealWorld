@@ -4,11 +4,12 @@ import { useRouter } from "../../../hooks/useRouter";
 import { ArticleInfo } from "../../../types/article";
 
 interface ArticleAuthorProps {
+  isUser: boolean;
   titleColor: string;
   article: ArticleInfo;
 }
 
-function ArticleAuthor({ titleColor, article }: ArticleAuthorProps) {
+function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
   const { routeTo } = useRouter();
 
   return (
@@ -20,16 +21,29 @@ function ArticleAuthor({ titleColor, article }: ArticleAuthorProps) {
         </p>
         <p>{article.createdAt}</p>
       </ArticleUserInfo>
-      <ButtonWrppaer>
-        <FollowButton isFollowed={article.author.following}>
-          <Icon icon="material-symbols:add" color="#ccc" />
-          <p>&nbsp;Follow {article.author.username}</p>
-        </FollowButton>
-        <FavoriteButton isFavorited={article.favorited}>
-          <Icon icon="mdi:cards-heart" color="#5cb85c" />
-          <p>&nbsp;Favorite Article ({article.favoritesCount})</p>
-        </FavoriteButton>
-      </ButtonWrppaer>
+      {isUser ? (
+        <ButtonWrppaer>
+          <EditButton onClick={() => routeTo(`/editor/${article.slug}`)}>
+            <Icon icon="material-symbols:edit" color="#ccc" />
+            <p>&nbsp;Edit Article</p>
+          </EditButton>
+          <DeleteButton>
+            <Icon icon="mdi:trash" color="#b85c5c" />
+            <p>&nbsp;Delete Article</p>
+          </DeleteButton>
+        </ButtonWrppaer>
+      ) : (
+        <ButtonWrppaer>
+          <FollowButton isFollowed={article.author.following}>
+            <Icon icon="material-symbols:add" color="#ccc" />
+            <p>&nbsp;Follow {article.author.username}</p>
+          </FollowButton>
+          <FavoriteButton isFavorited={article.favorited}>
+            <Icon icon="mdi:cards-heart" color="#5cb85c" />
+            <p>&nbsp;Favorite Article ({article.favoritesCount})</p>
+          </FavoriteButton>
+        </ButtonWrppaer>
+      )}
     </ArticleAuthorContainer>
   );
 }
@@ -67,28 +81,52 @@ const ButtonWrppaer = styled.div`
   padding-left: 10px;
 `;
 
+const EditButton = styled.button`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: #ccc;
+`;
+
+const DeleteButton = styled.button`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: transparent;
+  border: 1px solid #b85c5c;
+  color: #b85c5c;
+`;
+
 const FollowButton = styled.button<{ isFollowed: boolean }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
   background-color: ${({ isFollowed }) =>
     isFollowed ? "#ccc" : "transparent"};
   border: 1px solid #ccc;
   border-radius: 3px;
-  display: flex;
-  align-items: center;
-  color: ${({ isFollowed }) => (isFollowed ? "#000" : "#ccc")};
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 14px;
+  p {
+    color: ${({ isFollowed }) => (isFollowed ? "#000" : "#ccc")};
+    font-size: 14px;
+  }
 `;
 
 const FavoriteButton = styled.button<{ isFavorited: boolean }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
   background-color: ${({ isFavorited }) =>
     isFavorited ? "#5cb85c" : "transparent"};
   border: 1px solid #5cb85c;
   border-radius: 3px;
-  display: flex;
-  align-items: center;
-  color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 14px;
+  p {
+    color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
+    font-size: 14px;
+  }
 `;

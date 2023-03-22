@@ -4,10 +4,11 @@ import { ArticleInfo } from "../../../types/article";
 import ArticleAuthor from "./ArticleAuthor";
 
 interface ArticleProps {
+  isUser: boolean;
   article: ArticleInfo | null;
 }
 
-function AritcleInfoBanner({ article }: ArticleProps) {
+function AritcleInfoBanner({ isUser, article }: ArticleProps) {
   return (
     <ArticleInfoBanner>
       <Container>
@@ -16,7 +17,11 @@ function AritcleInfoBanner({ article }: ArticleProps) {
         ) : (
           <>
             <ArticleTitle>{article.title}</ArticleTitle>
-            <ArticleAuthor article={article} titleColor={"#fff"} />
+            <ArticleAuthor
+              isUser={isUser}
+              article={article}
+              titleColor={"#fff"}
+            />
           </>
         )}
       </Container>

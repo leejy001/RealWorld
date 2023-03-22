@@ -48,7 +48,7 @@ const routerData: RouterElement[] = [
   },
   {
     id: 4,
-    path: "/editor",
+    path: "/editor/*",
     element: (
       <ProtectedRoute {...defaultProtectedRouteProps} outlet={<Editor />} />
     ),

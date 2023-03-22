@@ -1,4 +1,9 @@
-import { ArticleResult, ArticlesResult } from "../types/article";
+import {
+  ArticleResult,
+  ArticlesResult,
+  PostArticleRequest,
+  PutArticleRequest
+} from "../types/article";
 import { fetchClient } from "./fetchClient";
 
 export const getArticlesInfoApi = async (
@@ -27,6 +32,42 @@ export const getArticleInfoApi = async (
       headers: {
         "Content-Type": "application/json"
       }
+    }
+  );
+
+  if (articleInfoRes.ok) {
+    return articleInfoRes.json() as Promise<ArticleResult>;
+  }
+
+  return null;
+};
+
+export const postArticleApi = async (
+  args: PostArticleRequest
+): Promise<string> => {
+  const articleInfoRes = await fetchClient(
+    `${process.env.REACT_APP_BASIC_URL}/articles`,
+    {
+      method: "POST",
+      body: JSON.stringify({ article: args })
+    }
+  );
+
+  if (articleInfoRes.ok) {
+    return "success";
+  }
+
+  return "fail";
+};
+
+export const putArticleApi = async (
+  args: PutArticleRequest
+): Promise<ArticleResult | null> => {
+  const articleInfoRes = await fetchClient(
+    `${process.env.REACT_APP_BASIC_URL}/articles`,
+    {
+      method: "PUT",
+      body: JSON.stringify(args)
     }
   );
 

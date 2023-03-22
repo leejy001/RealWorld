@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
+import { getUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
 import { ArticleInfo } from "../../types/article";
 import ArticleAuthor from "./components/ArticleAuthor";
@@ -10,6 +11,12 @@ import ArticleInfoBanner from "./components/ArticleInfoBanner";
 function Article() {
   const locate = useLocation();
   const [article, setArticle] = useState<ArticleInfo | null>(null);
+  const [isUser, setIsUser] = useState<boolean>(false);
+
+  const getUserInfo = useCallback(async () => {
+    const userRes = await getUserInfoApi();
+    setIsUser(userRes?.user.username === article?.author.username);
+  }, [article?.author.username]);
 
   const getArticleInfo = useCallback(async () => {
     const result = await getArticleInfoApi(locate.pathname.split("/")[2]);
@@ -17,12 +24,13 @@ function Article() {
   }, [locate.pathname]);
 
   useEffect(() => {
+    getUserInfo();
     getArticleInfo();
-  }, [getArticleInfo]);
+  }, [getUserInfo, getArticleInfo]);
 
   return (
     <>
-      <ArticleInfoBanner article={article} />
+      <ArticleInfoBanner isUser={isUser} article={article} />
       <Container>
         <ArticleDetail>{article?.body}</ArticleDetail>
         <ArticleTagList>
@@ -33,7 +41,11 @@ function Article() {
         <AritcleDivide />
         <AritcleAuthorWrapper>
           {article && (
-            <ArticleAuthor article={article} titleColor={"#5cb85c"} />
+            <ArticleAuthor
+              isUser={isUser}
+              article={article}
+              titleColor={"#5cb85c"}
+            />
           )}
         </AritcleAuthorWrapper>
         <CommentWrapper>

@@ -1,16 +1,24 @@
 import styled from "styled-components";
 import Container from "../../../components/Container";
+import { ArticleInfo } from "../../../types/article";
 import ArticleAuthor from "./ArticleAuthor";
 
-function AritcleInfoBanner() {
+interface ArticleProps {
+  article: ArticleInfo | null;
+}
+
+function AritcleInfoBanner({ article }: ArticleProps) {
   return (
     <ArticleInfoBanner>
       <Container>
-        <ArticleTitle>
-          Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-          consectetur, adipisci velit...
-        </ArticleTitle>
-        <ArticleAuthor titleColor={"#fff"} />
+        {!article ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <ArticleTitle>{article.title}</ArticleTitle>
+            <ArticleAuthor article={article} titleColor={"#fff"} />
+          </>
+        )}
       </Container>
     </ArticleInfoBanner>
   );

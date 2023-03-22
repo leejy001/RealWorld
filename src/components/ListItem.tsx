@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useRouter } from "../hooks/useRouter";
 import { ArticleInfo } from "../types/article";
 
 interface ArticleProps {
@@ -6,8 +7,10 @@ interface ArticleProps {
 }
 
 function ListItem({ article }: ArticleProps) {
+  const { routeTo } = useRouter();
+
   return (
-    <ListItemContainer>
+    <ListItemContainer onClick={() => routeTo(`/article/${article.slug}`)}>
       <ListItemInfo>
         <img src={article.author.image} alt="user img" width="32" height="32" />
         <div>

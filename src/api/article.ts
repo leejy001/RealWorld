@@ -1,9 +1,13 @@
-import { ArticleRequest, ArticleResult } from "../types/article";
+import {
+  ArticleResult,
+  ArticleRequest,
+  ArticlesResult
+} from "../types/article";
 import { fetchClient } from "./fetchClient";
 
 export const getGlobalArticleInfoApi = async (
   args: ArticleRequest
-): Promise<ArticleResult | null> => {
+): Promise<ArticlesResult | null> => {
   const queryString =
     "?" +
     Object.entries(args)
@@ -20,7 +24,7 @@ export const getGlobalArticleInfoApi = async (
   );
 
   if (articlesInfoRes.ok) {
-    return articlesInfoRes.json() as Promise<ArticleResult>;
+    return articlesInfoRes.json() as Promise<ArticlesResult>;
   }
 
   return null;
@@ -28,7 +32,7 @@ export const getGlobalArticleInfoApi = async (
 
 export const getMyArticleInfoApi = async (
   args: ArticleRequest
-): Promise<ArticleResult | null> => {
+): Promise<ArticlesResult | null> => {
   const queryString =
     "?" +
     Object.entries(args)
@@ -42,7 +46,27 @@ export const getMyArticleInfoApi = async (
   );
 
   if (articlesInfoRes.ok) {
-    return articlesInfoRes.json() as Promise<ArticleResult>;
+    return articlesInfoRes.json() as Promise<ArticlesResult>;
+  }
+
+  return null;
+};
+
+export const getArticleInfoApi = async (
+  slug: string
+): Promise<ArticleResult | null> => {
+  const articleInfoRes = await fetch(
+    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  if (articleInfoRes.ok) {
+    return articleInfoRes.json() as Promise<ArticleResult>;
   }
 
   return null;

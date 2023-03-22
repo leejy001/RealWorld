@@ -24,7 +24,11 @@ export interface ArticleInfo {
   };
 }
 
-export interface ArticleResult {
+export interface ArticlesResult {
   articles: ArticleInfo[];
   articlesCount: number;
+}
+
+export interface ArticleResult {
+  article: ArticleInfo;
 }

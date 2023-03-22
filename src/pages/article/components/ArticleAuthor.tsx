@@ -1,33 +1,33 @@
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
+import { useRouter } from "../../../hooks/useRouter";
+import { ArticleInfo } from "../../../types/article";
 
 interface ArticleAuthorProps {
   titleColor: string;
+  article: ArticleInfo;
 }
 
-function ArticleAuthor({ titleColor }: ArticleAuthorProps) {
+function ArticleAuthor({ titleColor, article }: ArticleAuthorProps) {
+  const { routeTo } = useRouter();
+
   return (
     <ArticleAuthorContainer>
-      <img
-        src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-        alt="user img"
-        width="32"
-        height="32"
-      />
+      <img src={article.author.image} alt="user img" width="32" height="32" />
       <ArticleUserInfo titleColor={titleColor}>
-        <p>
-          <a href="/@lee12345">lee12345</a>
+        <p onClick={() => routeTo(`/profile/@${article.author.username}`)}>
+          {article.author.username}
         </p>
-        <p>March 17, 2023</p>
+        <p>{article.createdAt}</p>
       </ArticleUserInfo>
       <ButtonWrppaer>
-        <FollowButton>
+        <FollowButton isFollowed={article.author.following}>
           <Icon icon="material-symbols:add" color="#ccc" />
-          <p>&nbsp;Follow lee12345</p>
+          <p>&nbsp;Follow {article.author.username}</p>
         </FollowButton>
-        <FavoriteButton>
+        <FavoriteButton isFavorited={article.favorited}>
           <Icon icon="mdi:cards-heart" color="#5cb85c" />
-          <p>&nbsp;Favorite Article (659)</p>
+          <p>&nbsp;Favorite Article ({article.favoritesCount})</p>
         </FavoriteButton>
       </ButtonWrppaer>
     </ArticleAuthorContainer>
@@ -48,12 +48,11 @@ const ArticleAuthorContainer = styled.div`
 
 const ArticleUserInfo = styled.div<{ titleColor: string }>`
   p:nth-child(1) {
-    a {
-      font-size: 16px;
-      color: ${({ titleColor }) => titleColor};
-      &:hover {
-        text-decoration: underline;
-      }
+    font-size: 16px;
+    cursor: pointer;
+    color: ${({ titleColor }) => titleColor};
+    &:hover {
+      text-decoration: underline;
     }
   }
   p:nth-child(2) {
@@ -68,25 +67,27 @@ const ButtonWrppaer = styled.div`
   padding-left: 10px;
 `;
 
-const FollowButton = styled.button`
-  background-color: transparent;
+const FollowButton = styled.button<{ isFollowed: boolean }>`
+  background-color: ${({ isFollowed }) =>
+    isFollowed ? "#ccc" : "transparent"};
   border: 1px solid #ccc;
   border-radius: 3px;
   display: flex;
   align-items: center;
-  color: #ccc;
+  color: ${({ isFollowed }) => (isFollowed ? "#000" : "#ccc")};
   cursor: pointer;
   padding: 4px 8px;
   font-size: 14px;
 `;
 
-const FavoriteButton = styled.button`
-  background-color: transparent;
+const FavoriteButton = styled.button<{ isFavorited: boolean }>`
+  background-color: ${({ isFavorited }) =>
+    isFavorited ? "#5cb85c" : "transparent"};
   border: 1px solid #5cb85c;
   border-radius: 3px;
   display: flex;
   align-items: center;
-  color: #5cb85c;
+  color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
   cursor: pointer;
   padding: 4px 8px;
   font-size: 14px;

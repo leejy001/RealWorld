@@ -42,7 +42,7 @@ const routerData: RouterElement[] = [
   },
   {
     id: 3,
-    path: "/article",
+    path: "/article/:slug",
     element: <Article />,
     withAuth: false
   },
@@ -65,9 +65,7 @@ const routerData: RouterElement[] = [
   {
     id: 6,
     path: "/profile/:username",
-    element: (
-      <ProtectedRoute {...defaultProtectedRouteProps} outlet={<User />} />
-    ),
+    element: <User />,
     withAuth: true
   }
 ];

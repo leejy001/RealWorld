@@ -6,7 +6,11 @@ import {
   getMyArticleInfoApi
 } from "../../../api/article";
 import ListItem from "../../../components/ListItem";
-import { ArticleInfo } from "../../../types/article";
+import {
+  ArticleInfo,
+  ArticleRequest,
+  ArticlesResult
+} from "../../../types/article";
 import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
 interface TagProps {
@@ -16,22 +20,37 @@ interface TagProps {
 
 function FeedList({ tag, setTag }: TagProps) {
   const [articles, setArticles] = useState<ArticleInfo[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [params] = useState<ArticleRequest>({
+    limit: 10,
+    offset: 0
+  });
 
-  const getArticleInfo = useCallback(async () => {
-    console.log(tag);
-    if (tag === "my") {
-      const result = await getMyArticleInfoApi({ limit: 10, offset: 0 });
-      if (result?.articles) setArticles(result?.articles);
-      else setArticles([]);
-    } else {
-      const result = await getGlobalArticleInfoApi({ limit: 10, offset: 0 });
-      if (result?.articles) setArticles(result?.articles);
-    }
-  }, [tag]);
+  const getArticleInfo = useCallback(
+    async (tag: string) => {
+      let result: ArticlesResult | null = {
+        articles: [],
+        articlesCount: 0
+      };
+      setLoading(true);
+      if (tag === "my") {
+        result = await getMyArticleInfoApi(params);
+      } else if (tag !== "") {
+        result = await getGlobalArticleInfoApi({ ...params, tag });
+      } else {
+        result = await getGlobalArticleInfoApi({ ...params });
+      }
+      if (result?.articles) {
+        setArticles(result?.articles);
+        setLoading(false);
+      }
+    },
+    [params]
+  );
 
   useEffect(() => {
-    getArticleInfo();
-  }, [getArticleInfo]);
+    getArticleInfo(tag);
+  }, [getArticleInfo, tag]);
 
   return (
     <FeedListContainer>
@@ -55,9 +74,15 @@ function FeedList({ tag, setTag }: TagProps) {
         )}
       </FeedListNav>
       <FeedListWrapper>
-        {articles.map((item) => (
-          <ListItem key={item.slug} article={item} />
-        ))}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {articles.map((item) => (
+              <ListItem key={item.slug} article={item} />
+            ))}
+          </>
+        )}
       </FeedListWrapper>
     </FeedListContainer>
   );

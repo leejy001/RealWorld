@@ -64,7 +64,7 @@ const routerData: RouterElement[] = [
   },
   {
     id: 6,
-    path: "/profile/:username",
+    path: "/profile/:username/*",
     element: <User />,
     withAuth: true
   }

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Container from "../../components/Container";
 import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
-import ArticleList from "./components/ArticleList";
+import ArticleBody from "./components/ArticleBody";
 import ProfileBanner from "./components/ProfileBanner";
 
 function User() {
@@ -9,7 +9,7 @@ function User() {
     <UserContainer>
       <ProfileBanner isSignIn={getAccessTokenFromSessionStorage() !== null} />
       <Container>
-        <ArticleList />
+        <ArticleBody />
       </Container>
     </UserContainer>
   );

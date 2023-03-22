@@ -42,7 +42,7 @@ function Header({ userInfo }: UserInfoProps) {
                 width="26"
                 height="26"
               />
-              <p onClick={() => routeTo(`/profile/@${userInfo.user.username}`)}>
+              <p onClick={() => routeTo(`/profile/${userInfo.user.username}`)}>
                 &nbsp;{userInfo.user.username}
               </p>
             </HeaderUserProfile>

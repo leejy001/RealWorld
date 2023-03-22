@@ -1,20 +1,11 @@
-import {
-  ArticleResult,
-  ArticleRequest,
-  ArticlesResult
-} from "../types/article";
+import { ArticleResult, ArticlesResult } from "../types/article";
 import { fetchClient } from "./fetchClient";
 
 export const getGlobalArticleInfoApi = async (
-  args: ArticleRequest
+  query: string
 ): Promise<ArticlesResult | null> => {
-  const queryString =
-    "?" +
-    Object.entries(args)
-      .map((item) => `${item[0]}=${item[1]}`)
-      .join("&");
   const articlesInfoRes = await fetch(
-    `${process.env.REACT_APP_BASIC_URL}/articles${queryString}`,
+    `${process.env.REACT_APP_BASIC_URL}/articles${query}`,
     {
       method: "GET",
       headers: {
@@ -31,15 +22,10 @@ export const getGlobalArticleInfoApi = async (
 };
 
 export const getMyArticleInfoApi = async (
-  args: ArticleRequest
+  query: string
 ): Promise<ArticlesResult | null> => {
-  const queryString =
-    "?" +
-    Object.entries(args)
-      .map((item) => `${item[0]}=${item[1]}`)
-      .join("&");
   const articlesInfoRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles/feed${queryString}`,
+    `${process.env.REACT_APP_BASIC_URL}/articles/feed${query}`,
     {
       method: "GET"
     }

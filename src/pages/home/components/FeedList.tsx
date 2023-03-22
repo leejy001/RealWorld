@@ -6,11 +6,7 @@ import {
   getMyArticleInfoApi
 } from "../../../api/article";
 import ListItem from "../../../components/ListItem";
-import {
-  ArticleInfo,
-  ArticleRequest,
-  ArticlesResult
-} from "../../../types/article";
+import { ArticleInfo, ArticlesResult } from "../../../types/article";
 import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
 interface TagProps {
@@ -21,32 +17,27 @@ interface TagProps {
 function FeedList({ tag, setTag }: TagProps) {
   const [articles, setArticles] = useState<ArticleInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [params] = useState<ArticleRequest>({
-    limit: 10,
-    offset: 0
-  });
 
-  const getArticleInfo = useCallback(
-    async (tag: string) => {
-      let result: ArticlesResult | null = {
-        articles: [],
-        articlesCount: 0
-      };
-      setLoading(true);
-      if (tag === "my") {
-        result = await getMyArticleInfoApi(params);
-      } else if (tag !== "") {
-        result = await getGlobalArticleInfoApi({ ...params, tag });
-      } else {
-        result = await getGlobalArticleInfoApi({ ...params });
-      }
-      if (result?.articles) {
-        setArticles(result?.articles);
-        setLoading(false);
-      }
-    },
-    [params]
-  );
+  const getArticleInfo = useCallback(async (tag: string) => {
+    let result: ArticlesResult | null = {
+      articles: [],
+      articlesCount: 0
+    };
+    setLoading(true);
+    if (tag === "my") {
+      result = await getMyArticleInfoApi(`?limit=${10}&offset=${0}`);
+    } else if (tag !== "") {
+      result = await getGlobalArticleInfoApi(
+        `?tag=${tag}&limit=${10}&offset=${0}`
+      );
+    } else {
+      result = await getGlobalArticleInfoApi(`?limit=${10}&offset=${0}`);
+    }
+    if (result?.articles) {
+      setArticles(result?.articles);
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     getArticleInfo(tag);

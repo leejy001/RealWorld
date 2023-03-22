@@ -15,7 +15,7 @@ function ArticleAuthor({ titleColor, article }: ArticleAuthorProps) {
     <ArticleAuthorContainer>
       <img src={article.author.image} alt="user img" width="32" height="32" />
       <ArticleUserInfo titleColor={titleColor}>
-        <p onClick={() => routeTo(`/profile/@${article.author.username}`)}>
+        <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
           {article.author.username}
         </p>
         <p>{article.createdAt}</p>

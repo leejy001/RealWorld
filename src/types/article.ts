@@ -1,11 +1,3 @@
-export interface ArticleRequest {
-  tag?: string;
-  author?: string;
-  favorited?: string;
-  limit: number;
-  offset: number;
-}
-
 export interface ArticleInfo {
   slug: string;
   title: string;

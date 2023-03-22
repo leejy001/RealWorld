@@ -1,12 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  getGlobalArticleInfoApi,
-  getMyArticleInfoApi
-} from "../../../api/article";
-import ListItem from "../../../components/ListItem";
-import { ArticleInfo, ArticlesResult } from "../../../types/article";
+import ArticleList from "../../../components/ArticleList";
 import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
 interface TagProps {
@@ -15,33 +10,17 @@ interface TagProps {
 }
 
 function FeedList({ tag, setTag }: TagProps) {
-  const [articles, setArticles] = useState<ArticleInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const getArticleInfo = useCallback(async (tag: string) => {
-    let result: ArticlesResult | null = {
-      articles: [],
-      articlesCount: 0
-    };
-    setLoading(true);
-    if (tag === "my") {
-      result = await getMyArticleInfoApi(`?limit=${10}&offset=${0}`);
-    } else if (tag !== "") {
-      result = await getGlobalArticleInfoApi(
-        `?tag=${tag}&limit=${10}&offset=${0}`
-      );
-    } else {
-      result = await getGlobalArticleInfoApi(`?limit=${10}&offset=${0}`);
-    }
-    if (result?.articles) {
-      setArticles(result?.articles);
-      setLoading(false);
-    }
-  }, []);
+  const [query, setQuery] = useState<string>("?");
 
   useEffect(() => {
-    getArticleInfo(tag);
-  }, [getArticleInfo, tag]);
+    if (tag === "my") {
+      setQuery("/feed?");
+    } else if (tag !== "") {
+      setQuery(`?tag=${tag}&`);
+    } else {
+      setQuery("?");
+    }
+  }, [tag]);
 
   return (
     <FeedListContainer>
@@ -64,17 +43,7 @@ function FeedList({ tag, setTag }: TagProps) {
           </li>
         )}
       </FeedListNav>
-      <FeedListWrapper>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            {articles.map((item) => (
-              <ListItem key={item.slug} article={item} />
-            ))}
-          </>
-        )}
-      </FeedListWrapper>
+      <ArticleList query={query} />
     </FeedListContainer>
   );
 }
@@ -108,5 +77,3 @@ const FeedListNav = styled.ul`
   }
   border-bottom: 1px solid #aaa;
 `;
-
-const FeedListWrapper = styled.ul``;

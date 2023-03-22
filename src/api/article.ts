@@ -1,31 +1,11 @@
 import { ArticleResult, ArticlesResult } from "../types/article";
 import { fetchClient } from "./fetchClient";
 
-export const getGlobalArticleInfoApi = async (
-  query: string
-): Promise<ArticlesResult | null> => {
-  const articlesInfoRes = await fetch(
-    `${process.env.REACT_APP_BASIC_URL}/articles${query}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
-  );
-
-  if (articlesInfoRes.ok) {
-    return articlesInfoRes.json() as Promise<ArticlesResult>;
-  }
-
-  return null;
-};
-
-export const getMyArticleInfoApi = async (
+export const getArticlesInfoApi = async (
   query: string
 ): Promise<ArticlesResult | null> => {
   const articlesInfoRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles/feed${query}`,
+    `${process.env.REACT_APP_BASIC_URL}/articles${query}`,
     {
       method: "GET"
     }
@@ -34,7 +14,6 @@ export const getMyArticleInfoApi = async (
   if (articlesInfoRes.ok) {
     return articlesInfoRes.json() as Promise<ArticlesResult>;
   }
-
   return null;
 };
 

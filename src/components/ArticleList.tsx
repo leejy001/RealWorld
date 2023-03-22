@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getGlobalArticleInfoApi } from "../api/article";
+import { getArticlesInfoApi } from "../api/article";
 import { ArticleInfo, ArticlesResult } from "../types/article";
 import ListItem from "./ListItem";
 
@@ -18,7 +18,7 @@ function ArticleList({ query }: ParentProps) {
       articlesCount: 0
     };
     setLoading(true);
-    result = await getGlobalArticleInfoApi(`${query}limit=${10}&offset=${0}`);
+    result = await getArticlesInfoApi(`${query}limit=${10}&offset=${0}`);
     if (result?.articles) {
       setArticles(result?.articles);
       setLoading(false);
@@ -46,4 +46,7 @@ function ArticleList({ query }: ParentProps) {
 
 export default ArticleList;
 
-const ArticleListWrapper = styled.div``;
+const ArticleListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

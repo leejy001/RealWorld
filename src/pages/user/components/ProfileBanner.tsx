@@ -1,24 +1,63 @@
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
+import { getProfileApi } from "../../../api/profile";
+import { getUserInfoApi } from "../../../api/user";
+import { ProfileResult } from "../../../types/profile";
+import { useRouter } from "../../../hooks/useRouter";
 
-function ProfileBanner() {
+interface ProfileProps {
+  isSignIn: boolean;
+}
+
+function ProfileBanner({ isSignIn }: ProfileProps) {
+  const locate = useLocation();
+  const { routeTo } = useRouter();
+  const [isCurrent, setIsCurrent] = useState<boolean>(false);
+  const [profile, setProfile] = useState<ProfileResult | null>(null);
+
+  const getUserProfileInfo = useCallback(async () => {
+    const profileUser = await getProfileApi(
+      locate.pathname.split("/")[2].replace("@", "")
+    );
+    setProfile(profileUser);
+    if (isSignIn) {
+      const curUser = await getUserInfoApi();
+      setIsCurrent(curUser?.user.username === profileUser?.profile.username);
+    }
+  }, [isSignIn, locate.pathname]);
+
+  useEffect(() => {
+    getUserProfileInfo();
+  }, [getUserProfileInfo]);
+
   return (
     <ProfileBannerContainer>
-      <Container>
-        <img
-          src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-          alt="user img"
-          width="100"
-          height="100"
-        />
-        <ProfileName>lee12345</ProfileName>
-        <ProfileBio>Hello!!</ProfileBio>
-        <EditProfileButton href="/setting">
-          <Icon icon="mdi:gear" color="gray" />
-          <p>&nbsp;Edit Profile Settings</p>
-        </EditProfileButton>
-      </Container>
+      {profile && (
+        <Container>
+          <img
+            src={profile.profile.image}
+            alt="user img"
+            width="100"
+            height="100"
+          />
+          <ProfileName>{profile.profile.username}</ProfileName>
+          <ProfileBio>{profile.profile.bio}</ProfileBio>
+          {isCurrent ? (
+            <EditProfileButton onClick={() => routeTo("/setting")}>
+              <Icon icon="mdi:gear" color="gray" />
+              <p>&nbsp;Edit Profile Settings</p>
+            </EditProfileButton>
+          ) : (
+            <FollowButton isFollowed={profile.profile.following}>
+              <Icon icon="material-symbols:add" color="#ccc" />
+              <p>&nbsp;Follow {profile.profile.username}</p>
+            </FollowButton>
+          )}
+        </Container>
+      )}
     </ProfileBannerContainer>
   );
 }
@@ -29,8 +68,9 @@ const ProfileBannerContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  min-height: 230px;
   background-color: #f3f3f3;
-  padding: 32px 0px;
+  padding: 32px 0px 16px;
   div:first-child {
     display: flex;
     gap: 8px;
@@ -56,7 +96,7 @@ const ProfileBio = styled.p`
   margin-bottom: 32px;
 `;
 
-const EditProfileButton = styled.a`
+const EditProfileButton = styled.button`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -70,5 +110,22 @@ const EditProfileButton = styled.a`
   padding: 4px 8px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const FollowButton = styled.button<{ isFollowed: boolean }>`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: ${({ isFollowed }) => (isFollowed ? "#ccc" : "#fff")};
+  cursor: pointer;
+  padding: 4px 8px;
+  p {
+    color: ${({ isFollowed }) => (isFollowed ? "#fff" : "#ccc")};
+    font-size: 14px;
   }
 `;

@@ -1,33 +1,40 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { getArticleInfoApi, postArticleApi } from "../../api/article";
+import {
+  getArticleInfoApi,
+  postArticleApi,
+  putArticleApi
+} from "../../api/article";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
-import { PutArticleRequest } from "../../types/article";
+import { ArticleRequest } from "../../types/article";
 
 const initArticle = {
   title: "",
   description: "",
-  body: ""
+  body: "",
+  tagList: []
 };
 
 function Editor() {
   const { pathname } = useLocation();
   const { routeTo } = useRouter();
-  const [article, setArticle] = useState<PutArticleRequest>(initArticle);
-  const [tagList, setTagList] = useState<string[]>([]);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [article, setArticle] = useState<ArticleRequest>(initArticle);
   const [tag, setTag] = useState<string>("");
 
   const getArticleInfo = useCallback(async () => {
     const result = await getArticleInfoApi(pathname.split("/")[2]);
-    if (result?.article)
-      setArticle({
-        title: result?.article.title,
-        description: result?.article.description,
-        body: result?.article.body
-      });
-    setTagList(result?.article.tagList || []);
+
+    if (result === null) return;
+    setArticle({
+      title: result?.article.title,
+      description: result?.article.description,
+      body: result?.article.body,
+      tagList: result?.article.tagList
+    });
+    setIsEdit(true);
   }, [pathname]);
 
   const articleSubmitHandler = async (
@@ -36,16 +43,30 @@ function Editor() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const articleResult = await postArticleApi({
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      body: formData.get("body") as string,
-      tagList
-    });
+    if (isEdit) {
+      const articlePutResult = await putArticleApi(pathname.split("/")[2], {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        body: formData.get("body") as string,
+        tagList: article.tagList
+      });
 
-    if (articleResult === "fail") return;
+      if (articlePutResult.status === "success") {
+        routeTo(`/article/${articlePutResult.article?.slug}`);
+      }
+    } else {
+      const articlePostResult = await postArticleApi({
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        body: formData.get("body") as string,
+        tagList: article.tagList
+      });
 
-    routeTo("/");
+      if (articlePostResult.status === "success") {
+        routeTo(`/article/${articlePostResult.article?.slug}`);
+      }
+    }
+    return;
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,15 +77,18 @@ function Editor() {
   const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      if (!tagList.includes(tag)) {
-        setTagList([...tagList, tag]);
+      if (!article.tagList.includes(tag)) {
+        setArticle({ ...article, tagList: [...article.tagList, tag] });
         setTag("");
       }
     }
   };
 
   const removeTagClickHandler = (target: string) => {
-    setTagList(tagList.filter((tag) => tag !== target));
+    setArticle({
+      ...article,
+      tagList: article.tagList.filter((tag) => tag !== target)
+    });
   };
 
   useEffect(() => {
@@ -105,7 +129,7 @@ function Editor() {
           onKeyDown={onEnter}
         />
         <TagListWrapper>
-          {tagList?.map((item) => (
+          {article.tagList?.map((item) => (
             <li key={item}>
               <span onClick={() => removeTagClickHandler(item)}>X</span>
               &nbsp;{item}

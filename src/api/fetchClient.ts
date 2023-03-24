@@ -13,6 +13,7 @@ export const fetchClient = async (
         Authorization: `Bearer ${accessToken}`
       }
     };
+
     return fetch(url, newOptions);
   } else {
     const newOptions = {

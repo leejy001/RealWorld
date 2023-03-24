@@ -25,12 +25,14 @@ export interface ArticleResult {
   article: ArticleInfo;
 }
 
-export interface PutArticleRequest {
+export interface ArticleRequest {
   title: string;
   description: string;
   body: string;
+  tagList: string[];
 }
 
-export interface PostArticleRequest extends PutArticleRequest {
-  tagList: string[];
+export interface ArticleEditResult {
+  status: string;
+  article?: ArticleInfo;
 }

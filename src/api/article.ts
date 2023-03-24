@@ -1,8 +1,8 @@
 import {
+  ArticleRequest,
   ArticleResult,
   ArticlesResult,
-  PostArticleRequest,
-  PutArticleRequest
+  ArticleEditResult
 } from "../types/article";
 import { fetchClient } from "./fetchClient";
 
@@ -43,9 +43,9 @@ export const getArticleInfoApi = async (
 };
 
 export const postArticleApi = async (
-  args: PostArticleRequest
-): Promise<string> => {
-  const articleInfoRes = await fetchClient(
+  args: ArticleRequest
+): Promise<ArticleEditResult> => {
+  const articlePostRes = await fetchClient(
     `${process.env.REACT_APP_BASIC_URL}/articles`,
     {
       method: "POST",
@@ -53,27 +53,32 @@ export const postArticleApi = async (
     }
   );
 
-  if (articleInfoRes.ok) {
-    return "success";
+  const articlePostResponseData = await articlePostRes.json();
+
+  if (articlePostRes.ok) {
+    return { ...articlePostResponseData, status: "success" };
   }
 
-  return "fail";
+  return { status: "fail" };
 };
 
 export const putArticleApi = async (
-  args: PutArticleRequest
-): Promise<ArticleResult | null> => {
-  const articleInfoRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles`,
+  slug: string,
+  args: ArticleRequest
+): Promise<ArticleEditResult> => {
+  const articlePutRes = await fetchClient(
+    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}`,
     {
       method: "PUT",
-      body: JSON.stringify(args)
+      body: JSON.stringify({ article: args })
     }
   );
 
-  if (articleInfoRes.ok) {
-    return articleInfoRes.json() as Promise<ArticleResult>;
+  const articlePutResponseData = await articlePutRes.json();
+
+  if (articlePutRes.ok) {
+    return { ...articlePutResponseData, status: "success" };
   }
 
-  return null;
+  return { status: "fail" };
 };

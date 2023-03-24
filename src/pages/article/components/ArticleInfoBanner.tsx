@@ -7,12 +7,14 @@ interface ArticleProps {
   isUser: boolean;
   article: ArticleInfo | null;
   favoritedClickHandler: () => Promise<void>;
+  followClickHandler: () => Promise<void>;
 }
 
 function AritcleInfoBanner({
   isUser,
   article,
-  favoritedClickHandler
+  favoritedClickHandler,
+  followClickHandler
 }: ArticleProps) {
   return (
     <ArticleInfoBanner>
@@ -27,6 +29,7 @@ function AritcleInfoBanner({
               article={article}
               titleColor={"#fff"}
               favoritedClickHandler={favoritedClickHandler}
+              followClickHandler={followClickHandler}
             />
           </>
         )}

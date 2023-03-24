@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
+import { followAuthorApi, unfollowAuthorApi } from "../../api/profile";
 import { getUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
@@ -22,6 +23,17 @@ function Article() {
     }
     const postRes = await favoriteApi(currentPath.split("/")[2]);
     if (postRes === "success") return getArticleInfo();
+    return;
+  };
+
+  const followClickHandler = async () => {
+    if (article && article?.author.following) {
+      const unfollowRes = await unfollowAuthorApi(article.author.username);
+      if (unfollowRes === "success") return getArticleInfo();
+    } else if (article && !article.author.following) {
+      const followRes = await followAuthorApi(article?.author.username);
+      if (followRes === "success") return getArticleInfo();
+    }
     return;
   };
 
@@ -46,6 +58,7 @@ function Article() {
         isUser={isUser}
         article={article}
         favoritedClickHandler={favoritedClickHandler}
+        followClickHandler={followClickHandler}
       />
       <Container>
         <ArticleDetail>{article?.body}</ArticleDetail>
@@ -62,6 +75,7 @@ function Article() {
               article={article}
               titleColor={"#5cb85c"}
               favoritedClickHandler={favoritedClickHandler}
+              followClickHandler={followClickHandler}
             />
           )}
         </AritcleAuthorWrapper>

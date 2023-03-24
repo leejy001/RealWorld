@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
-import { getProfileApi } from "../../../api/profile";
+import {
+  followAuthorApi,
+  getProfileApi,
+  unfollowAuthorApi
+} from "../../../api/profile";
 import { getUserInfoApi } from "../../../api/user";
 import { ProfileResult } from "../../../types/profile";
 import { useRouter } from "../../../hooks/useRouter";
@@ -15,6 +19,17 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
   const { currentPath, routeTo } = useRouter();
   const [isCurrent, setIsCurrent] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileResult | null>(null);
+
+  const followClickHandler = async () => {
+    if (profile && profile?.profile.following) {
+      const unfollowRes = await unfollowAuthorApi(profile?.profile.username);
+      if (unfollowRes === "success") return getUserProfileInfo();
+    } else if (profile && !profile.profile.following) {
+      const followRes = await followAuthorApi(profile?.profile.username);
+      if (followRes === "success") return getUserProfileInfo();
+    }
+    return;
+  };
 
   const getUserProfileInfo = useCallback(async () => {
     const profileUser = await getProfileApi(currentPath.split("/")[2]);
@@ -41,11 +56,25 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
           />
           <ProfileName>{profile.profile.username}</ProfileName>
           <ProfileBio>{profile.profile.bio}</ProfileBio>
-          {isCurrent && (
+          {isCurrent ? (
             <EditProfileButton onClick={() => routeTo("/setting")}>
               <Icon icon="mdi:gear" color="gray" />
               <p>&nbsp;Edit Profile Settings</p>
             </EditProfileButton>
+          ) : (
+            <FollowButton
+              isFollowed={profile.profile.following}
+              onClick={followClickHandler}
+            >
+              <Icon
+                icon="material-symbols:add"
+                color={profile.profile.following ? "#000" : "gray"}
+              />
+              <p>
+                &nbsp;{profile.profile.following ? "Unfollow" : "Follow"}{" "}
+                {profile.profile.username}
+              </p>
+            </FollowButton>
           )}
         </Container>
       )}
@@ -101,5 +130,26 @@ const EditProfileButton = styled.button`
   padding: 4px 8px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const FollowButton = styled.button<{ isFollowed: boolean }>`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: ${({ isFollowed }) =>
+    isFollowed ? "#fff" : "transparent"};
+  cursor: pointer;
+  padding: 4px 8px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  p {
+    color: ${({ isFollowed }) => (isFollowed ? "#000" : "gray")};
+    font-size: 14px;
   }
 `;

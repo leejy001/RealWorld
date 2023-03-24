@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Container from "../../components/Container";
 import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
+import Container from "../../components/Container";
 import ArticleBody from "./components/ArticleBody";
 import ProfileBanner from "./components/ProfileBanner";
 

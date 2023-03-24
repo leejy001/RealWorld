@@ -45,10 +45,6 @@ function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
         </ButtonWrppaer>
       ) : (
         <ButtonWrppaer>
-          <FollowButton isFollowed={article.author.following}>
-            <Icon icon="material-symbols:add" color="#ccc" />
-            <p>&nbsp;Follow {article.author.username}</p>
-          </FollowButton>
           <FavoriteButton isFavorited={article.favorited}>
             <Icon icon="mdi:cards-heart" color="#5cb85c" />
             <p>&nbsp;Favorite Article ({article.favoritesCount})</p>

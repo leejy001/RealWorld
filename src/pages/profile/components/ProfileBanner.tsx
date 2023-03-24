@@ -17,9 +17,7 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
   const [profile, setProfile] = useState<ProfileResult | null>(null);
 
   const getUserProfileInfo = useCallback(async () => {
-    const profileUser = await getProfileApi(
-      currentPath.split("/")[2].replace("@", "")
-    );
+    const profileUser = await getProfileApi(currentPath.split("/")[2]);
     setProfile(profileUser);
     if (isSignIn) {
       const curUser = await getUserInfoApi();
@@ -43,16 +41,11 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
           />
           <ProfileName>{profile.profile.username}</ProfileName>
           <ProfileBio>{profile.profile.bio}</ProfileBio>
-          {isCurrent ? (
+          {isCurrent && (
             <EditProfileButton onClick={() => routeTo("/setting")}>
               <Icon icon="mdi:gear" color="gray" />
               <p>&nbsp;Edit Profile Settings</p>
             </EditProfileButton>
-          ) : (
-            <FollowButton isFollowed={profile.profile.following}>
-              <Icon icon="material-symbols:add" color="#ccc" />
-              <p>&nbsp;Follow {profile.profile.username}</p>
-            </FollowButton>
           )}
         </Container>
       )}
@@ -108,22 +101,5 @@ const EditProfileButton = styled.button`
   padding: 4px 8px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const FollowButton = styled.button<{ isFollowed: boolean }>`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: ${({ isFollowed }) => (isFollowed ? "#ccc" : "#fff")};
-  cursor: pointer;
-  padding: 4px 8px;
-  p {
-    color: ${({ isFollowed }) => (isFollowed ? "#fff" : "#ccc")};
-    font-size: 14px;
   }
 `;

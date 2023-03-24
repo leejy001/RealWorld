@@ -6,9 +6,14 @@ import ArticleAuthor from "./ArticleAuthor";
 interface ArticleProps {
   isUser: boolean;
   article: ArticleInfo | null;
+  favoritedClickHandler: () => Promise<void>;
 }
 
-function AritcleInfoBanner({ isUser, article }: ArticleProps) {
+function AritcleInfoBanner({
+  isUser,
+  article,
+  favoritedClickHandler
+}: ArticleProps) {
   return (
     <ArticleInfoBanner>
       <Container>
@@ -21,6 +26,7 @@ function AritcleInfoBanner({ isUser, article }: ArticleProps) {
               isUser={isUser}
               article={article}
               titleColor={"#fff"}
+              favoritedClickHandler={favoritedClickHandler}
             />
           </>
         )}

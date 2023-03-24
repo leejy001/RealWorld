@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
+import { unfavoriteApi, favoriteApi } from "../../api/favorite";
 import { getUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
@@ -12,6 +13,17 @@ function Article() {
   const { currentPath, routeTo } = useRouter();
   const [article, setArticle] = useState<ArticleInfo | null>(null);
   const [isUser, setIsUser] = useState<boolean>(false);
+
+  const favoritedClickHandler = async () => {
+    if (article?.favorited) {
+      const deleteRes = await unfavoriteApi(currentPath.split("/")[2]);
+      if (deleteRes === "success") return getArticleInfo();
+      return;
+    }
+    const postRes = await favoriteApi(currentPath.split("/")[2]);
+    if (postRes === "success") return getArticleInfo();
+    return;
+  };
 
   const getUserInfo = useCallback(async () => {
     const userRes = await getUserInfoApi();
@@ -30,7 +42,11 @@ function Article() {
 
   return (
     <ArticleContainer>
-      <ArticleInfoBanner isUser={isUser} article={article} />
+      <ArticleInfoBanner
+        isUser={isUser}
+        article={article}
+        favoritedClickHandler={favoritedClickHandler}
+      />
       <Container>
         <ArticleDetail>{article?.body}</ArticleDetail>
         <ArticleTagList>
@@ -45,6 +61,7 @@ function Article() {
               isUser={isUser}
               article={article}
               titleColor={"#5cb85c"}
+              favoritedClickHandler={favoritedClickHandler}
             />
           )}
         </AritcleAuthorWrapper>

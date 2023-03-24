@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { deleteArticleApi } from "../../../api/article";
 import { useRouter } from "../../../hooks/useRouter";
 import { ArticleInfo } from "../../../types/article";
@@ -8,9 +8,15 @@ interface ArticleAuthorProps {
   isUser: boolean;
   titleColor: string;
   article: ArticleInfo;
+  favoritedClickHandler: () => Promise<void>;
 }
 
-function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
+function ArticleAuthor({
+  isUser,
+  titleColor,
+  article,
+  favoritedClickHandler
+}: ArticleAuthorProps) {
   const { currentPath, routeTo } = useRouter();
 
   const deleteArticleClickHandler = async () => {
@@ -45,9 +51,19 @@ function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
         </ButtonWrppaer>
       ) : (
         <ButtonWrppaer>
-          <FavoriteButton isFavorited={article.favorited}>
-            <Icon icon="mdi:cards-heart" color="#5cb85c" />
-            <p>&nbsp;Favorite Article ({article.favoritesCount})</p>
+          <FavoriteButton
+            isFavorited={article.favorited}
+            onClick={favoritedClickHandler}
+          >
+            <Icon
+              className="icon"
+              icon="mdi:cards-heart"
+              color={article.favorited ? "#fff" : "#5cb85c"}
+            />
+            <p>
+              &nbsp;{article.favorited ? "Unfavorite" : "Favorite"} Article (
+              {article.favoritesCount})
+            </p>
           </FavoriteButton>
         </ButtonWrppaer>
       )}
@@ -108,21 +124,6 @@ const DeleteButton = styled.button`
   color: #b85c5c;
 `;
 
-const FollowButton = styled.button<{ isFollowed: boolean }>`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 4px 8px;
-  background-color: ${({ isFollowed }) =>
-    isFollowed ? "#ccc" : "transparent"};
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  p {
-    color: ${({ isFollowed }) => (isFollowed ? "#000" : "#ccc")};
-    font-size: 14px;
-  }
-`;
-
 const FavoriteButton = styled.button<{ isFavorited: boolean }>`
   display: flex;
   align-items: center;
@@ -132,6 +133,9 @@ const FavoriteButton = styled.button<{ isFavorited: boolean }>`
     isFavorited ? "#5cb85c" : "transparent"};
   border: 1px solid #5cb85c;
   border-radius: 3px;
+  &:hover {
+    background-color: gray;
+  }
   p {
     color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
     font-size: 14px;

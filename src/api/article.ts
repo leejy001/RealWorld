@@ -25,14 +25,9 @@ export const getArticlesInfoApi = async (
 export const getArticleInfoApi = async (
   slug: string
 ): Promise<ArticleResult | null> => {
-  const articleInfoRes = await fetch(
+  const articleInfoRes = await fetchClient(
     `${process.env.REACT_APP_BASIC_URL}/articles/${slug}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
+    { method: "GET" }
   );
 
   if (articleInfoRes.ok) {

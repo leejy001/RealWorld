@@ -1,22 +1,23 @@
 import { useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import styled, { css } from "styled-components";
 import ArticleList from "../../../components/ArticleList";
 import { useRouter } from "../../../hooks/useRouter";
 
 function ArticleBody() {
-  const { routeTo } = useRouter();
-  const { pathname } = useLocation();
-  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  const { currentPath, routeTo } = useRouter();
+  const [isFavorited, setIsFavorited] = useState<boolean>(
+    !!currentPath.split("/")[3]
+  );
 
   const getMyArticles = () => {
     setIsFavorited(false);
-    routeTo(`/profile/${pathname.split("/")[2]}`);
+    routeTo(`/profile/${currentPath.split("/")[2]}`);
   };
 
   const getFavoriteArticles = () => {
     setIsFavorited(true);
-    routeTo(`/profile/${pathname.split("/")[2]}/favorites`);
+    routeTo(`/profile/${currentPath.split("/")[2]}/favorites`);
   };
 
   return (
@@ -38,12 +39,14 @@ function ArticleBody() {
       <Routes>
         <Route
           path="/"
-          element={<ArticleList query={`?author=${pathname.split("/")[2]}&`} />}
+          element={
+            <ArticleList query={`?author=${currentPath.split("/")[2]}&`} />
+          }
         />
         <Route
           path="/favorites"
           element={
-            <ArticleList query={`?favorited=${pathname.split("/")[2]}&`} />
+            <ArticleList query={`?favorited=${currentPath.split("/")[2]}&`} />
           }
         />
       </Routes>

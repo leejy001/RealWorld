@@ -5,6 +5,9 @@ export const useRouter = () => {
 
   return {
     currentPath: window.location.pathname,
-    routeTo: (path: string) => router(path)
+    routeTo: (path: string) => {
+      if (isNaN(Number(path))) router(path);
+      else router(Number(path));
+    }
   };
 };

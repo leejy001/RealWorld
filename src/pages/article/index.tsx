@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
 import { getUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
+import { useRouter } from "../../hooks/useRouter";
 import { ArticleInfo } from "../../types/article";
 import ArticleAuthor from "./components/ArticleAuthor";
 import ArticleInfoBanner from "./components/ArticleInfoBanner";
 
 function Article() {
-  const locate = useLocation();
+  const { currentPath, routeTo } = useRouter();
   const [article, setArticle] = useState<ArticleInfo | null>(null);
   const [isUser, setIsUser] = useState<boolean>(false);
 
@@ -19,9 +19,9 @@ function Article() {
   }, [article?.author.username]);
 
   const getArticleInfo = useCallback(async () => {
-    const result = await getArticleInfoApi(locate.pathname.split("/")[2]);
+    const result = await getArticleInfoApi(currentPath.split("/")[2]);
     if (result?.article) setArticle(result?.article);
-  }, [locate.pathname]);
+  }, [currentPath]);
 
   useEffect(() => {
     getUserInfo();
@@ -29,7 +29,7 @@ function Article() {
   }, [getUserInfo, getArticleInfo]);
 
   return (
-    <>
+    <ArticleContainer>
       <ArticleInfoBanner isUser={isUser} article={article} />
       <Container>
         <ArticleDetail>{article?.body}</ArticleDetail>
@@ -50,16 +50,21 @@ function Article() {
         </AritcleAuthorWrapper>
         <CommentWrapper>
           <p>
-            <span>Sign in</span> or <span>sign up</span> to add comments on this
-            article.
+            <span onClick={() => routeTo("/sign-in")}>Sign in</span> or{" "}
+            <span onClick={() => routeTo("/sign-up")}>sign up</span> to add
+            comments on this article.
           </p>
         </CommentWrapper>
       </Container>
-    </>
+    </ArticleContainer>
   );
 }
 
 export default Article;
+
+const ArticleContainer = styled.div`
+  padding-bottom: 66px;
+`;
 
 const ArticleDetail = styled.p`
   font-size: 20px;

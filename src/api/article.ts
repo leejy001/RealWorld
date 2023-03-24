@@ -82,3 +82,15 @@ export const putArticleApi = async (
 
   return { status: "fail" };
 };
+
+export const deleteArticleApi = async (slug: string): Promise<string> => {
+  const articleDeleteRes = await fetchClient(
+    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}`,
+    {
+      method: "DELETE"
+    }
+  );
+
+  if (articleDeleteRes.ok) return "success";
+  return "fail";
+};

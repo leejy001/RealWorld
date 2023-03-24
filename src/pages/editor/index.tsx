@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import {
   getArticleInfoApi,
@@ -18,14 +17,13 @@ const initArticle = {
 };
 
 function Editor() {
-  const { pathname } = useLocation();
-  const { routeTo } = useRouter();
+  const { currentPath, routeTo } = useRouter();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [article, setArticle] = useState<ArticleRequest>(initArticle);
   const [tag, setTag] = useState<string>("");
 
   const getArticleInfo = useCallback(async () => {
-    const result = await getArticleInfoApi(pathname.split("/")[2]);
+    const result = await getArticleInfoApi(currentPath.split("/")[2]);
 
     if (result === null) return;
     setArticle({
@@ -35,7 +33,7 @@ function Editor() {
       tagList: result?.article.tagList
     });
     setIsEdit(true);
-  }, [pathname]);
+  }, [currentPath]);
 
   const articleSubmitHandler = async (
     event: React.FormEvent<HTMLFormElement>
@@ -44,7 +42,7 @@ function Editor() {
     const formData = new FormData(event.currentTarget);
 
     if (isEdit) {
-      const articlePutResult = await putArticleApi(pathname.split("/")[2], {
+      const articlePutResult = await putArticleApi(currentPath.split("/")[2], {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         body: formData.get("body") as string,
@@ -93,10 +91,10 @@ function Editor() {
 
   useEffect(() => {
     setArticle(initArticle);
-    if (pathname.split("/")[2]) {
+    if (currentPath.split("/")[2]) {
       getArticleInfo();
     }
-  }, [getArticleInfo, pathname]);
+  }, [getArticleInfo, currentPath]);
 
   return (
     <Container>

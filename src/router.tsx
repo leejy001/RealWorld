@@ -7,7 +7,7 @@ import SignUp from "./pages/signup";
 import Article from "./pages/article";
 import Editor from "./pages/editor";
 import Setting from "./pages/setting";
-import User from "./pages/user";
+import Profile from "./pages/profile";
 import ProtectedRoute, { PrivateRouteProps } from "./utils/PrivateRoute";
 
 interface RouterElement {
@@ -65,7 +65,7 @@ const routerData: RouterElement[] = [
   {
     id: 6,
     path: "/profile/:username/*",
-    element: <User />,
+    element: <Profile />,
     withAuth: true
   }
 ];

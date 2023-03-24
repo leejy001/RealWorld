@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
@@ -13,21 +12,20 @@ interface ProfileProps {
 }
 
 function ProfileBanner({ isSignIn }: ProfileProps) {
-  const locate = useLocation();
-  const { routeTo } = useRouter();
+  const { currentPath, routeTo } = useRouter();
   const [isCurrent, setIsCurrent] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileResult | null>(null);
 
   const getUserProfileInfo = useCallback(async () => {
     const profileUser = await getProfileApi(
-      locate.pathname.split("/")[2].replace("@", "")
+      currentPath.split("/")[2].replace("@", "")
     );
     setProfile(profileUser);
     if (isSignIn) {
       const curUser = await getUserInfoApi();
       setIsCurrent(curUser?.user.username === profileUser?.profile.username);
     }
-  }, [isSignIn, locate.pathname]);
+  }, [isSignIn, currentPath]);
 
   useEffect(() => {
     getUserProfileInfo();

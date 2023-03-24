@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
+import { deleteArticleApi } from "../../../api/article";
 import { useRouter } from "../../../hooks/useRouter";
 import { ArticleInfo } from "../../../types/article";
 
@@ -10,7 +11,17 @@ interface ArticleAuthorProps {
 }
 
 function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
-  const { routeTo } = useRouter();
+  const { currentPath, routeTo } = useRouter();
+
+  const deleteArticleClickHandler = async () => {
+    const articleDeleteResult = await deleteArticleApi(
+      currentPath.split("/")[2]
+    );
+
+    if (articleDeleteResult === "fail") return;
+
+    routeTo("-1");
+  };
 
   return (
     <ArticleAuthorContainer>
@@ -27,7 +38,7 @@ function ArticleAuthor({ isUser, titleColor, article }: ArticleAuthorProps) {
             <Icon icon="material-symbols:edit" color="#ccc" />
             <p>&nbsp;Edit Article</p>
           </EditButton>
-          <DeleteButton>
+          <DeleteButton onClick={deleteArticleClickHandler}>
             <Icon icon="mdi:trash" color="#b85c5c" />
             <p>&nbsp;Delete Article</p>
           </DeleteButton>

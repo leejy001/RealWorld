@@ -16,7 +16,7 @@ const BannerContainer = styled.div`
   justify-content: center;
   text-align: center;
   flex-direction: column;
-  background-color: #5cb85c;
+  background-color: ${({ theme }) => theme.colors.COLOR_GREEN};
   margin-bottom: 32px;
   padding: 32px;
 `;
@@ -25,7 +25,7 @@ const ConduitLogo = styled.p`
   margin: 0;
   font-size: 56px;
   line-height: 1.1;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.FONT_WHITE};
   padding-bottom: 8px;
   text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
   font-weight: 700;
@@ -34,5 +34,5 @@ const ConduitLogo = styled.p`
 const ConduitDesc = styled.p`
   font-size: 24px;
   font-weight: 300;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.FONT_WHITE};
 `;

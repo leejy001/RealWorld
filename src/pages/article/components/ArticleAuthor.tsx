@@ -108,7 +108,7 @@ const ArticleUserInfo = styled.div<{ titleColor: string }>`
   }
   p:nth-child(2) {
     font-size: 12px;
-    color: #bbb;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
   }
 `;
 
@@ -124,8 +124,8 @@ const EditButton = styled.button`
   cursor: pointer;
   padding: 4px 8px;
   background-color: transparent;
-  border: 1px solid #ccc;
-  color: #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
 `;
 
 const DeleteButton = styled.button`
@@ -134,8 +134,8 @@ const DeleteButton = styled.button`
   cursor: pointer;
   padding: 4px 8px;
   background-color: transparent;
-  border: 1px solid #b85c5c;
-  color: #b85c5c;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_RED};
+  color: ${({ theme }) => theme.colors.FONT_RED};
 `;
 
 const FollowButton = styled.button<{ isFollowed: boolean }>`
@@ -143,15 +143,16 @@ const FollowButton = styled.button<{ isFollowed: boolean }>`
   align-items: center;
   cursor: pointer;
   padding: 4px 8px;
-  background-color: ${({ isFollowed }) =>
-    isFollowed ? "#ccc" : "transparent"};
-  border: 1px solid #ccc;
+  background-color: ${({ isFollowed, theme }) =>
+    isFollowed ? theme.colors.COLOR_GRAY : "transparent"};
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
   border-radius: 3px;
   &:hover {
-    background-color: gray;
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
   }
   p {
-    color: ${({ isFollowed }) => (isFollowed ? "#000" : "#ccc")};
+    color: ${({ isFollowed, theme }) =>
+      isFollowed ? theme.colors.FONT_BLACK : theme.colors.FONT_GRAY};
     font-size: 14px;
   }
 `;
@@ -161,15 +162,16 @@ const FavoriteButton = styled.button<{ isFavorited: boolean }>`
   align-items: center;
   cursor: pointer;
   padding: 4px 8px;
-  background-color: ${({ isFavorited }) =>
-    isFavorited ? "#5cb85c" : "transparent"};
-  border: 1px solid #5cb85c;
+  background-color: ${({ isFavorited, theme }) =>
+    isFavorited ? theme.colors.FONT_GREEN : "transparent"};
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GREEN};
   border-radius: 3px;
   &:hover {
-    background-color: gray;
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
   }
   p {
-    color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
+    color: ${({ isFavorited, theme }) =>
+      isFavorited ? theme.colors.FONT_WHITE : theme.colors.FONT_GREEN};
     font-size: 14px;
   }
 `;

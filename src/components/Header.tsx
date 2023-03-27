@@ -59,7 +59,7 @@ const HeaderContainer = styled.header`
   height: 56px;
   padding: 8px 16px;
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.COLOR_WHITE};
   div {
     display: flex;
     justify-content: space-between;
@@ -68,7 +68,7 @@ const HeaderContainer = styled.header`
 
 const HeaderLogo = styled.p`
   cursor: pointer;
-  color: #5cb85c;
+  color: ${({ theme }) => theme.colors.FONT_GREEN};
   font-size: 24px;
   font-weight: 700;
 `;
@@ -93,10 +93,10 @@ const HeaderUserProfile = styled.div`
   margin-left: 10px;
   display: flex;
   align-items: center;
-  color: gray;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
   cursor: pointer;
   &:hover {
-    color: black;
+    color: ${({ theme }) => theme.colors.FONT_BLACK};
   }
   img {
     border-radius: 50%;

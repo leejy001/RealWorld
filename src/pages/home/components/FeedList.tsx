@@ -64,16 +64,16 @@ const FeedListNav = styled.ul`
     align-items: center;
     font-size: 16px;
     padding: 8px 16px;
-    color: #aaa;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
     cursor: pointer;
     margin-bottom: -1px;
     &:hover {
-      color: #373a3c;
+      color: ${({ theme }) => theme.colors.FONT_BLACK};
     }
   }
   li.active {
-    color: #5cb85c;
-    border-bottom: 2px solid #5cb85c;
+    color: ${({ theme }) => theme.colors.FONT_GREEN};
+    border-bottom: 2px solid ${({ theme }) => theme.colors.COLOR_GREEN};
   }
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
 `;

@@ -51,10 +51,12 @@ function ListItem({ article }: ArticleProps) {
             height="32"
           />
           <div>
-            <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
+            <ListItemAuthor
+              onClick={() => routeTo(`/profile/${article.author.username}`)}
+            >
               {article.author.username}
-            </p>
-            <p>March 17, 2023</p>
+            </ListItemAuthor>
+            <ListItemCreateAt>March 17, 2023</ListItemCreateAt>
           </div>
         </ListItemHeaderInfo>
         <FavoriteButton
@@ -93,7 +95,7 @@ export default ListItem;
 const ListItemContainer = styled.li`
   padding: 24px 0px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
 `;
 
 const ListItemHeader = styled.div`
@@ -114,36 +116,41 @@ const ListItemHeaderInfo = styled.div`
     display: flex;
     flex-direction: column;
     line-height: 1;
-    p:first-child {
-      font-size: 16px;
-      color: #5cb85c;
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    p:last-child {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.3);
-    }
   }
+`;
+
+const ListItemAuthor = styled.p`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.FONT_GREEN};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const ListItemCreateAt = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
 `;
 
 const FavoriteButton = styled.button<{ isFavorited: boolean }>`
   display: flex;
+  gap: 5px;
   align-items: center;
   padding: 4px 8px;
-  border: 1px solid #5cb85c;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GREEN};
   border-radius: 3px;
   cursor: pointer;
   p {
     font-size: 14px;
     font-weight: 600;
-    color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
+    color: ${({ isFavorited, theme }) =>
+      isFavorited ? theme.colors.FONT_WHITE : theme.colors.FONT_GREEN};
   }
-  background-color: ${({ isFavorited }) => (isFavorited ? "#5cb85c" : "#fff")};
+  background-color: ${({ isFavorited, theme }) =>
+    isFavorited ? theme.colors.FONT_GREEN : theme.colors.FONT_WHITE};
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: ${(props) => props.theme.colors.HOVER_GRAY};
   }
 `;
 
@@ -158,6 +165,7 @@ const ListItemBody = styled.div`
 `;
 
 const ListItemTitle = styled.p`
+  color: ${({ theme }) => theme.colors.FONT_BLACK};
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 3px;
@@ -170,9 +178,9 @@ const ListItemTitle = styled.p`
 `;
 
 const ListItemSubTitle = styled.p`
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
   font-size: 16px;
   font-weight: 300;
-  color: #999;
   display: -webkit-box;
   word-wrap: break-word;
   -webkit-line-clamp: 3;
@@ -182,8 +190,8 @@ const ListItemSubTitle = styled.p`
 `;
 
 const ReadMore = styled.p`
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
   font-size: 12px;
-  color: #aaa;
 `;
 
 const ListItemTagList = styled.ul`
@@ -192,9 +200,9 @@ const ListItemTagList = styled.ul`
   li {
     height: 18px;
     line-height: 14px;
-    border: 0.5px solid #aaa;
+    border: 0.5px solid ${({ theme }) => theme.colors.COLOR_GRAY};
     border-radius: 50px;
-    color: #aaa;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
     cursor: pointer;
     font-size: 12px;
     padding: 0px 8px;

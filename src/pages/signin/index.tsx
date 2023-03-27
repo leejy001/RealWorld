@@ -68,7 +68,7 @@ const SignInContianer = styled.div`
 
 const SignUpButton = styled.div`
   cursor: pointer;
-  color: #5cb85c;
+  color: ${({ theme }) => theme.colors.FONT_GREEN};
   margin-bottom: 16px;
   &:hover {
     text-decoration: underline;
@@ -82,16 +82,16 @@ const SignInForm = styled.form`
     font-size: 20px;
     padding: 12px 24px;
     border-radius: 3px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
     margin-bottom: 16px;
   }
   button {
     cursor: pointer;
     padding: 12px 24px;
-    color: #fff;
+    color: ${({ theme }) => theme.colors.FONT_WHITE};
     font-size: 20px;
     border: none;
-    background-color: #5cb85c;
+    background-color: ${({ theme }) => theme.colors.COLOR_GREEN};
     border-radius: 5px;
   }
 `;

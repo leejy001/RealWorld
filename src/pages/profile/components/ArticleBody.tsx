@@ -62,7 +62,7 @@ const ArticleListContainer = styled.div`
 
 const ArticleNavWrapper = styled.ul`
   display: flex;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
 `;
 
 const ArticleNavItem = styled.li<{ isFavorited: boolean }>`
@@ -72,8 +72,8 @@ const ArticleNavItem = styled.li<{ isFavorited: boolean }>`
   ${({ isFavorited }) =>
     isFavorited &&
     css`
-      border-bottom: 2px solid #5cb85c;
+      border-bottom: 2px solid ${({ theme }) => theme.colors.COLOR_GREEN};
       margin-bottom: -1px;
-      color: #5cb85c;
+      color: ${({ theme }) => theme.colors.FONT_GREEN};
     `};
 `;

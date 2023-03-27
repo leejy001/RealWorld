@@ -77,7 +77,7 @@ const TagListWrapper = styled.ul`
     height: 22px;
     line-height: 20px;
     border-radius: 50px;
-    background-color: #818a91;
+    background-color: ${({ theme }) => theme.colors.COLOR_GRAY};
     color: white;
     cursor: pointer;
     font-size: 14px;

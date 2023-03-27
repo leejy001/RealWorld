@@ -125,7 +125,7 @@ const ArticleInfoBanner = styled.div`
 const ArticleTitle = styled.p`
   font-size: 44px;
   font-weight: 600;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.FONT_WHITE};
   margin-bottom: 32px;
 `;
 
@@ -141,9 +141,9 @@ const ArticleTagList = styled.ul`
   li {
     height: 18px;
     line-height: 14px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
     border-radius: 50px;
-    color: #aaa;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
     font-size: 12px;
     padding: 0px 8px;
   }
@@ -152,7 +152,7 @@ const ArticleTagList = styled.ul`
 const AritcleDivide = styled.hr`
   margin: 30px 0px;
   border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
 `;
 
 const AritcleAuthorWrapper = styled.div`
@@ -163,7 +163,7 @@ const AritcleAuthorWrapper = styled.div`
 const CommentsWrapper = styled.div`
   margin: 40px 0px;
   p span {
-    color: #5cb85c;
+    color: ${({ theme }) => theme.colors.COLOR_GREEN};
     cursor: pointer;
   }
 `;

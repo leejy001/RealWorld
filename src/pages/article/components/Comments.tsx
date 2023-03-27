@@ -124,7 +124,7 @@ const CommentsContainer = styled.div`
 const CommentFormCard = styled.div`
   width: 100%;
   margin-bottom: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
   border-radius: 5px;
   textarea {
     border: none;
@@ -144,17 +144,17 @@ const CommentFormCardFooter = styled.div`
   padding: 12px 20px;
   background-color: #f5f5f5;
   border-radius: 0px 0px 5px 5px;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
   img {
     border-radius: 50%;
   }
 `;
 
 const PostCommentButton = styled.button<{ isWritten: boolean }>`
-  background-color: #5cb85c;
-  border: 1px solid #5cb85c;
+  background-color: ${({ theme }) => theme.colors.COLOR_GREEN};
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GREEN};
   border-radius: 3px;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.FONT_WHITE};
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -169,7 +169,7 @@ const CommentsListWrapper = styled.div`
 `;
 
 const CommentCard = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
   border-radius: 5px;
 `;
 
@@ -183,7 +183,7 @@ const CommentCardFooter = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #f5f5f5;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
   padding: 12px 20px;
   img {
     border-radius: 50%;
@@ -199,12 +199,12 @@ const CommentCardUserInfo = styled.div`
 const CommentCardUserName = styled.p`
   cursor: pointer;
   font-size: 12px;
-  color: #5cb85c;
+  color: ${({ theme }) => theme.colors.FONT_GREEN};
 `;
 
 const CommentCardCreateAt = styled.p`
   font-size: 12px;
-  color: #bbb;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
 `;
 
 const CommentDeleteButton = styled.button`

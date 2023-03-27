@@ -158,13 +158,13 @@ const NewArticleForm = styled.form`
     font-size: 16px;
     padding: 8px 12px;
     border-radius: 3px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
     margin-bottom: 16px;
   }
   textarea {
     font-size: 16px;
     border-radius: 3px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
     padding: 8px 12px;
     margin-bottom: 16px;
     height: 200px;
@@ -180,7 +180,7 @@ const TagListWrapper = styled.ul`
     height: 22px;
     line-height: 20px;
     border-radius: 50px;
-    background-color: #818a91;
+    background-color: ${({ theme }) => theme.colors.COLOR_GRAY};
     color: white;
     font-size: 14px;
     padding: 0px 8px;
@@ -197,10 +197,10 @@ const ButtonWrapper = styled.div`
     width: 200px;
     cursor: pointer;
     padding: 12px 24px;
-    color: #fff;
+    color: ${({ theme }) => theme.colors.COLOR_WHITE};
     font-size: 20px;
     border: none;
-    background-color: #5cb85c;
+    background-color: ${({ theme }) => theme.colors.COLOR_GREEN};
     border-radius: 5px;
   }
 `;

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useState } from "react";
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
 interface UserInfo {
@@ -19,19 +19,17 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<UserInfo | null>(null);
 
   const setUserInfo = useCallback((userRes: UserInfo) => {
-    setUser({
-      email: userRes.email,
-      username: userRes.username,
-      bio: userRes.bio,
-      image: userRes.image
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!getAccessTokenFromSessionStorage()) {
+    if (getAccessTokenFromSessionStorage()) {
+      setUser({
+        email: userRes.email,
+        username: userRes.username,
+        bio: userRes.bio,
+        image: userRes.image
+      });
+    } else {
       setUser(null);
     }
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUserInfo }}>

@@ -18,6 +18,12 @@ function Setting() {
 
   const signOutClickHandler = () => {
     removeAccessTokenFromSessionStorage();
+    setUserInfo({
+      email: "",
+      username: "",
+      bio: "",
+      image: ""
+    });
     routeTo("/");
   };
 
@@ -112,7 +118,7 @@ const SettingWrapper = styled.div`
   text-align: center;
   width: 550px;
   hr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid ${({ theme }) => theme.colors.BORDER_GRAY};
     margin: 16px 0px;
   }
 `;
@@ -133,14 +139,14 @@ const SettingsForm = styled.form`
     font-size: 20px;
     padding: 12px 24px;
     border-radius: 3px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.FONT_GRAY};
     margin-bottom: 16px;
   }
   textarea {
     font-size: 20px;
     padding: 12px 24px;
     border-radius: 3px;
-    border: 1px solid #aaa;
+    border: 1px solid ${({ theme }) => theme.colors.FONT_GRAY};
     margin-bottom: 16px;
     height: 200px;
     resize: vertical;
@@ -154,10 +160,10 @@ const UpdateButtonWrapper = styled.div`
     width: 200px;
     cursor: pointer;
     padding: 12px 24px;
-    color: #fff;
+    color: ${({ theme }) => theme.colors.FONT_WHITE};
     font-size: 20px;
     border: none;
-    background-color: #5cb85c;
+    background-color: ${({ theme }) => theme.colors.FONT_GREEN};
     border-radius: 5px;
   }
 `;
@@ -169,14 +175,14 @@ const SignOutButtonWrapper = styled.div`
     width: 200px;
     cursor: pointer;
     padding: 8px 20px;
-    color: #b85c5c;
+    color: ${({ theme }) => theme.colors.FONT_RED};
     font-size: 16px;
-    background-color: #fff;
+    background-color: ${({ theme }) => theme.colors.COLOR_WHITE};
     border-radius: 5px;
-    border: 1px solid #b85c5c;
+    border: 1px solid ${({ theme }) => theme.colors.COLOR_RED};
     &:hover {
       color: #fff;
-      background-color: #b85c5c;
+      background-color: ${({ theme }) => theme.colors.FONT_RED};
     }
   }
 `;

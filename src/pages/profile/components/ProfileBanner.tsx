@@ -7,7 +7,6 @@ import {
   getProfileApi,
   unfollowAuthorApi
 } from "../../../api/profile";
-import { getUserInfoApi } from "../../../api/user";
 import { ProfileResult } from "../../../types/profile";
 import { useRouter } from "../../../hooks/useRouter";
 import {
@@ -113,7 +112,7 @@ const ProfileName = styled.p`
 
 const ProfileBio = styled.p`
   font-size: 16px;
-  color: #aaa;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
   margin-bottom: 32px;
 `;
 
@@ -123,14 +122,14 @@ const EditProfileButton = styled.button`
   right: 0;
   display: flex;
   align-items: center;
-  border: 1px solid #999;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
   border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0);
-  color: #999;
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
   cursor: pointer;
   padding: 4px 8px;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
   }
 `;
 
@@ -140,17 +139,18 @@ const FollowButton = styled.button<{ isFollowed: boolean }>`
   right: 0;
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
   border-radius: 3px;
-  background-color: ${({ isFollowed }) =>
-    isFollowed ? "#fff" : "transparent"};
+  background-color: ${({ isFollowed, theme }) =>
+    isFollowed ? theme.colors.FONT_WHITE : "transparent"};
   cursor: pointer;
   padding: 4px 8px;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
   }
   p {
-    color: ${({ isFollowed }) => (isFollowed ? "#000" : "gray")};
+    color: ${({ isFollowed, theme }) =>
+      isFollowed ? theme.colors.FONT_WHITE : theme.colors.FONT_GRAY};
     font-size: 14px;
   }
 `;

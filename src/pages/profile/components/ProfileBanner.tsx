@@ -10,6 +10,7 @@ import {
 import { getUserInfoApi } from "../../../api/user";
 import { ProfileResult } from "../../../types/profile";
 import { useRouter } from "../../../hooks/useRouter";
+import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
 interface ProfileProps {
   isSignIn: boolean;
@@ -21,6 +22,9 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
   const [profile, setProfile] = useState<ProfileResult | null>(null);
 
   const followClickHandler = async () => {
+    if (!getAccessTokenFromSessionStorage()) {
+      return routeTo("/sign-in");
+    }
     if (profile && profile?.profile.following) {
       const unfollowRes = await unfollowAuthorApi(profile?.profile.username);
       if (unfollowRes === "success") return getUserProfileInfo();

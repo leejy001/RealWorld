@@ -1,6 +1,10 @@
+import { Icon } from "@iconify/react";
+import { useState } from "react";
 import styled from "styled-components";
+import { favoriteApi, unfavoriteApi } from "../api/favorite";
 import { useRouter } from "../hooks/useRouter";
 import { ArticleInfo } from "../types/article";
+import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
 interface ArticleProps {
   article: ArticleInfo;
@@ -8,17 +12,63 @@ interface ArticleProps {
 
 function ListItem({ article }: ArticleProps) {
   const { routeTo } = useRouter();
+  const [isFavorited, setIsFavorited] = useState<boolean>(article.favorited);
+  const [favoriteCount, setFavoriteCount] = useState<number>(
+    article.favoritesCount
+  );
+
+  const favoritedClickHandler = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    if (!getAccessTokenFromSessionStorage()) {
+      return routeTo("/sign-in");
+    }
+    if (article?.favorited) {
+      const deleteRes = await unfavoriteApi(article.slug);
+      if (deleteRes === "success") {
+        setIsFavorited(false);
+        setFavoriteCount(favoriteCount - 1);
+      }
+      return;
+    }
+    const postRes = await favoriteApi(article.slug);
+    if (postRes === "success") {
+      setIsFavorited(true);
+      setFavoriteCount(favoriteCount + 1);
+    }
+    return;
+  };
 
   return (
-    <ListItemContainer onClick={() => routeTo(`/article/${article.slug}`)}>
-      <ListItemInfo>
-        <img src={article.author.image} alt="user img" width="32" height="32" />
-        <div>
-          <p>{article.author.username}</p>
-          <p>March 17, 2023</p>
-        </div>
-      </ListItemInfo>
-      <ListItemDesc>
+    <ListItemContainer>
+      <ListItemHeader>
+        <ListItemHeaderInfo>
+          <img
+            src={article.author.image}
+            alt="user img"
+            width="32"
+            height="32"
+          />
+          <div>
+            <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
+              {article.author.username}
+            </p>
+            <p>March 17, 2023</p>
+          </div>
+        </ListItemHeaderInfo>
+        <FavoriteButton
+          isFavorited={isFavorited}
+          onClick={favoritedClickHandler}
+        >
+          <Icon
+            icon="mdi:cards-heart"
+            color={isFavorited ? "#fff" : "#5cb85c"}
+          />
+          <p>{favoriteCount}</p>
+        </FavoriteButton>
+      </ListItemHeader>
+      <ListItemBody onClick={() => routeTo(`/article/${article.slug}`)}>
         <div>
           <ListItemTitle>{article.title}</ListItemTitle>
           <ListItemSubTitle>{article.description}</ListItemSubTitle>
@@ -33,7 +83,7 @@ function ListItem({ article }: ArticleProps) {
             </ListItemTagList>
           )}
         </div>
-      </ListItemDesc>
+      </ListItemBody>
     </ListItemContainer>
   );
 }
@@ -46,11 +96,17 @@ const ListItemContainer = styled.li`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-const ListItemInfo = styled.div`
+const ListItemHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  justify-content: space-between;
+`;
+
+const ListItemHeaderInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
   img {
     border-radius: 50%;
   }
@@ -61,6 +117,10 @@ const ListItemInfo = styled.div`
     p:first-child {
       font-size: 16px;
       color: #5cb85c;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
     }
     p:last-child {
       font-size: 12px;
@@ -69,7 +129,25 @@ const ListItemInfo = styled.div`
   }
 `;
 
-const ListItemDesc = styled.div`
+const FavoriteButton = styled.button<{ isFavorited: boolean }>`
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid #5cb85c;
+  border-radius: 3px;
+  cursor: pointer;
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    color: ${({ isFavorited }) => (isFavorited ? "#fff" : "#5cb85c")};
+  }
+  background-color: ${({ isFavorited }) => (isFavorited ? "#5cb85c" : "#fff")};
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const ListItemBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;

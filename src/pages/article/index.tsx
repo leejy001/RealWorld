@@ -8,6 +8,7 @@ import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
 import { ArticleInfo } from "../../types/article";
 import { UserResult } from "../../types/user";
+import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
 import ArticleAuthor from "./components/ArticleAuthor";
 import Comments from "./components/Comments";
 
@@ -18,6 +19,9 @@ function Article() {
   const [userInfo, setUserInfo] = useState<UserResult | null>(null);
 
   const favoritedClickHandler = async () => {
+    if (!getAccessTokenFromSessionStorage()) {
+      return routeTo("/sign-in");
+    }
     if (article?.favorited) {
       const deleteRes = await unfavoriteApi(currentPath.split("/")[2]);
       if (deleteRes === "success") return getArticleInfo();
@@ -29,6 +33,9 @@ function Article() {
   };
 
   const followClickHandler = async () => {
+    if (!getAccessTokenFromSessionStorage()) {
+      return routeTo("/sign-in");
+    }
     if (article && article?.author.following) {
       const unfollowRes = await unfollowAuthorApi(article.author.username);
       if (unfollowRes === "success") return getArticleInfo();
@@ -164,5 +171,6 @@ const CommentsWrapper = styled.div`
   margin: 40px 0px;
   p span {
     color: #5cb85c;
+    cursor: pointer;
   }
 `;

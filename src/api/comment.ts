@@ -19,7 +19,6 @@ export const postCommentApi = async (
   slug: string,
   body: string
 ): Promise<string> => {
-  console.log(body);
   const postCommentRes = await fetchClient(
     `${process.env.REACT_APP_BASIC_URL}/articles/${slug}/comments`,
     { method: "POST", body: JSON.stringify({ comment: { body } }) }

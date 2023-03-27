@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
@@ -10,21 +10,19 @@ import {
 import { getUserInfoApi } from "../../../api/user";
 import { ProfileResult } from "../../../types/profile";
 import { useRouter } from "../../../hooks/useRouter";
-import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
+import {
+  AuthContext,
+  AuthContextInfo
+} from "../../../contexts/AuthContextProvider";
 
-interface ProfileProps {
-  isSignIn: boolean;
-}
-
-function ProfileBanner({ isSignIn }: ProfileProps) {
+function ProfileBanner() {
+  const { user } = useContext(AuthContext) as AuthContextInfo;
   const { currentPath, routeTo } = useRouter();
   const [isCurrent, setIsCurrent] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileResult | null>(null);
 
   const followClickHandler = async () => {
-    if (!getAccessTokenFromSessionStorage()) {
-      return routeTo("/sign-in");
-    }
+    if (!user) return routeTo("/sign-in");
     if (profile && profile?.profile.following) {
       const unfollowRes = await unfollowAuthorApi(profile?.profile.username);
       if (unfollowRes === "success") return getUserProfileInfo();
@@ -38,11 +36,10 @@ function ProfileBanner({ isSignIn }: ProfileProps) {
   const getUserProfileInfo = useCallback(async () => {
     const profileUser = await getProfileApi(currentPath.split("/")[2]);
     setProfile(profileUser);
-    if (isSignIn) {
-      const curUser = await getUserInfoApi();
-      setIsCurrent(curUser?.user.username === profileUser?.profile.username);
+    if (user) {
+      setIsCurrent(user.username === profileUser?.profile.username);
     }
-  }, [isSignIn, currentPath]);
+  }, [currentPath, user]);
 
   useEffect(() => {
     getUserProfileInfo();

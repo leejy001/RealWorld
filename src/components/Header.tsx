@@ -2,13 +2,11 @@ import styled from "styled-components";
 import { Icon } from "@iconify/react";
 import Container from "./Container";
 import { useRouter } from "../hooks/useRouter";
-import { UserResult } from "../types/user";
+import { useContext } from "react";
+import { AuthContext, AuthContextInfo } from "../contexts/AuthContextProvider";
 
-interface UserInfoProps {
-  userInfo: UserResult | null;
-}
-
-function Header({ userInfo }: UserInfoProps) {
+function Header() {
+  const { user } = useContext(AuthContext) as AuthContextInfo;
   const { routeTo } = useRouter();
 
   return (
@@ -17,7 +15,7 @@ function Header({ userInfo }: UserInfoProps) {
         <HeaderLogo onClick={() => routeTo("/")}>conduit</HeaderLogo>
         <HeaderNavWrapper>
           <li onClick={() => routeTo("/")}>Home</li>
-          {userInfo === null ? (
+          {user === null ? (
             <>
               <li onClick={() => routeTo("/sign-in")}>Sign in</li>
               <li onClick={() => routeTo("/sign-up")}>Sign up</li>
@@ -34,16 +32,11 @@ function Header({ userInfo }: UserInfoProps) {
               </li>
             </>
           )}
-          {userInfo && (
+          {user && (
             <HeaderUserProfile>
-              <img
-                src={userInfo.user.image}
-                alt="user img"
-                width="26"
-                height="26"
-              />
-              <p onClick={() => routeTo(`/profile/${userInfo.user.username}`)}>
-                &nbsp;{userInfo.user.username}
+              <img src={user.image} alt="user img" width="26" height="26" />
+              <p onClick={() => routeTo(`/profile/${user.username}`)}>
+                &nbsp;{user.username}
               </p>
             </HeaderUserProfile>
           )}

@@ -1,32 +1,38 @@
 import React, {
   PropsWithChildren,
   useCallback,
-  useEffect,
-  useState
+  useContext,
+  useEffect
 } from "react";
 import styled from "styled-components";
 import { getUserInfoApi } from "../api/user";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { UserResult } from "../types/user";
+import { AuthContext, AuthContextInfo } from "../contexts/AuthContextProvider";
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
 function GeneralLayout({ children }: PropsWithChildren) {
-  const [userInfo, setUserInfo] = useState<UserResult | null>(null);
+  const { setUserInfo } = useContext(AuthContext) as AuthContextInfo;
   const token = getAccessTokenFromSessionStorage();
 
-  const getUserInfo = useCallback(async () => {
+  const getUserInfoFunc = useCallback(async () => {
     const userRes = await getUserInfoApi();
-    setUserInfo(userRes);
-  }, []);
+    if (userRes)
+      setUserInfo({
+        email: userRes?.user.email,
+        username: userRes?.user.username,
+        bio: userRes?.user.bio,
+        image: userRes?.user.image
+      });
+  }, [setUserInfo]);
 
   useEffect(() => {
-    getUserInfo();
-  }, [getUserInfo, token]);
+    getUserInfoFunc();
+  }, [getUserInfoFunc, token]);
 
   return (
     <GeneralLayoutContainer>
-      <Header userInfo={userInfo} />
+      <Header />
       {children}
       <Footer />
     </GeneralLayoutContainer>

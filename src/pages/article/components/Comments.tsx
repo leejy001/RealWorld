@@ -8,11 +8,17 @@ import {
 } from "../../../api/comment";
 import { useRouter } from "../../../hooks/useRouter";
 import { CommentResult } from "../../../types/comment";
-import { UserResult } from "../../../types/user";
+
+interface UserInfo {
+  email: string;
+  username: string;
+  bio: string;
+  image: string;
+}
 
 interface ArticleProps {
   slug: string;
-  userInfo: UserResult | null;
+  userInfo: UserInfo;
 }
 function Comments({ slug, userInfo }: ArticleProps) {
   const { routeTo } = useRouter();
@@ -57,12 +63,7 @@ function Comments({ slug, userInfo }: ArticleProps) {
           onChange={handleChange}
         />
         <CommentFormCardFooter>
-          <img
-            src={userInfo?.user.image}
-            alt="profile-img"
-            width={30}
-            height={30}
-          />
+          <img src={userInfo.image} alt="profile-img" width={30} height={30} />
           <PostCommentButton
             onClick={commentSubmitClickHandler}
             isWritten={body.length !== 0}
@@ -93,7 +94,7 @@ function Comments({ slug, userInfo }: ArticleProps) {
                 </CommentCardUserName>
                 <CommentCardCreateAt>{comment.createdAt}</CommentCardCreateAt>
               </CommentCardUserInfo>
-              {userInfo?.user.username === comment.author.username && (
+              {userInfo.username === comment.author.username && (
                 <CommentDeleteButton
                   onClick={() => deleteCommentClickHandler(comment.id)}
                 >

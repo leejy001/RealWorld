@@ -1,24 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
-import { getUserInfoApi, putUserInfoApi } from "../../api/user";
+import { putUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
+import {
+  AuthContext,
+  AuthContextInfo
+} from "../../contexts/AuthContextProvider";
 import { useRouter } from "../../hooks/useRouter";
-import { UserResult } from "../../types/user";
-import { removeAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
+import {
+  removeAccessTokenFromSessionStorage,
+  saveAccessTokenToSessionStorage
+} from "../../utils/accessTokenHandler";
 
 function Setting() {
   const { routeTo } = useRouter();
-  const [userInfo, setUserInfo] = useState<UserResult | null>(null);
+  const { user, setUserInfo } = useContext(AuthContext) as AuthContextInfo;
 
   const signOutClickHandler = () => {
     removeAccessTokenFromSessionStorage();
     routeTo("/");
   };
-
-  const getUserInfo = useCallback(async () => {
-    const userRes = await getUserInfoApi();
-    setUserInfo(userRes);
-  }, []);
 
   const userInfoSubmitHandler = async (
     event: React.FormEvent<HTMLFormElement>
@@ -38,12 +39,16 @@ function Setting() {
 
     if (userInfoResult === null) return;
 
+    saveAccessTokenToSessionStorage(userInfoResult.user.token);
+    setUserInfo({
+      email: userInfoResult.user.username,
+      username: userInfoResult.user.username,
+      bio: userInfoResult.user.bio,
+      image: userInfoResult.user.image
+    });
+
     routeTo("/");
   };
-
-  useEffect(() => {
-    getUserInfo();
-  }, [getUserInfo]);
 
   return (
     <Container>
@@ -55,26 +60,26 @@ function Setting() {
             name="image"
             placeholder="URL of profile picture"
             autoComplete="false"
-            defaultValue={userInfo?.user.image}
+            defaultValue={user?.image}
           />
           <input
             type="text"
             name="username"
             placeholder="Username"
             autoComplete="false"
-            defaultValue={userInfo?.user.username}
+            defaultValue={user?.username}
           />
           <textarea
             name="bio"
             placeholder="Short bio about you"
-            defaultValue={userInfo?.user.bio}
+            defaultValue={user?.bio}
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             autoComplete="false"
-            defaultValue={userInfo?.user.email}
+            defaultValue={user?.email}
           />
           <input
             type="password"

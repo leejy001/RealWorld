@@ -1,27 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
 import { followAuthorApi, unfollowAuthorApi } from "../../api/profile";
-import { getUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
+import {
+  AuthContext,
+  AuthContextInfo
+} from "../../contexts/AuthContextProvider";
 import { useRouter } from "../../hooks/useRouter";
 import { ArticleInfo } from "../../types/article";
-import { UserResult } from "../../types/user";
-import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
 import ArticleAuthor from "./components/ArticleAuthor";
 import Comments from "./components/Comments";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
+  const { user } = useContext(AuthContext) as AuthContextInfo;
   const [article, setArticle] = useState<ArticleInfo | null>(null);
   const [isUser, setIsUser] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<UserResult | null>(null);
 
   const favoritedClickHandler = async () => {
-    if (!getAccessTokenFromSessionStorage()) {
-      return routeTo("/sign-in");
-    }
+    if (!user) return routeTo("/sign-in");
     if (article?.favorited) {
       const deleteRes = await unfavoriteApi(currentPath.split("/")[2]);
       if (deleteRes === "success") return getArticleInfo();
@@ -33,9 +32,7 @@ function Article() {
   };
 
   const followClickHandler = async () => {
-    if (!getAccessTokenFromSessionStorage()) {
-      return routeTo("/sign-in");
-    }
+    if (!user) return routeTo("/sign-in");
     if (article && article?.author.following) {
       const unfollowRes = await unfollowAuthorApi(article.author.username);
       if (unfollowRes === "success") return getArticleInfo();
@@ -46,21 +43,17 @@ function Article() {
     return;
   };
 
-  const getUserInfo = useCallback(async () => {
-    const userRes = await getUserInfoApi();
-    setUserInfo(userRes);
-    setIsUser(userRes?.user.username === article?.author.username);
-  }, [article?.author.username]);
-
   const getArticleInfo = useCallback(async () => {
     const result = await getArticleInfoApi(currentPath.split("/")[2]);
-    if (result?.article) setArticle(result?.article);
-  }, [currentPath]);
+    if (result?.article) {
+      setArticle(result?.article);
+      setIsUser(user?.username === result.article.author.username);
+    }
+  }, [currentPath, user?.username]);
 
   useEffect(() => {
-    getUserInfo();
     getArticleInfo();
-  }, [getUserInfo, getArticleInfo]);
+  }, [getArticleInfo]);
 
   return (
     <ArticleContainer>
@@ -102,14 +95,14 @@ function Article() {
           )}
         </AritcleAuthorWrapper>
         <CommentsWrapper>
-          {!userInfo ? (
+          {!user ? (
             <p>
               <span onClick={() => routeTo("/sign-in")}>Sign in</span> or{" "}
               <span onClick={() => routeTo("/sign-up")}>sign up</span> to add
               comments on this article.
             </p>
           ) : (
-            <Comments slug={currentPath.split("/")[2]} userInfo={userInfo} />
+            <Comments slug={currentPath.split("/")[2]} userInfo={user} />
           )}
         </CommentsWrapper>
       </Container>

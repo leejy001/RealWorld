@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { getArticlesInfoApi } from "../api/article";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
 import { ArticleInfo, ArticlesResult } from "../types/article";
-import { currentTimer } from "../utils/getDateTimeHandler";
 import ListItem from "./ListItem";
 import Spinner from "./Spinner";
 

@@ -1,79 +1,43 @@
-import React from "react";
 import styled from "styled-components";
 import { Icon } from "@iconify/react";
 import Container from "./Container";
-
-const NavItem = [
-  {
-    id: 1,
-    path: "/",
-    label: "Home",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 2,
-    path: "/sign-in",
-    label: "Sign in",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 3,
-    path: "/sign-up",
-    label: "Sign up",
-    image: null,
-    isAuth: false
-  },
-  {
-    id: 4,
-    path: "/",
-    label: "Home",
-    image: null,
-    isAuth: true
-  },
-  {
-    id: 5,
-    path: "/editor",
-    label: "New Article",
-    image: <Icon icon="ion:compose" color="gray" />,
-    isAuth: true
-  },
-  {
-    id: 6,
-    path: "/setting",
-    label: "Setting",
-    image: <Icon icon="mdi:gear" color="gray" />,
-    isAuth: true
-  }
-];
+import { useRouter } from "../hooks/useRouter";
+import { useContext } from "react";
+import { AuthContext, AuthContextInfo } from "../contexts/AuthContextProvider";
 
 function Header() {
+  const { user } = useContext(AuthContext) as AuthContextInfo;
+  const { routeTo } = useRouter();
+
   return (
     <HeaderContainer>
       <Container>
-        <HeaderLogo href="/">conduit</HeaderLogo>
+        <HeaderLogo onClick={() => routeTo("/")}>conduit</HeaderLogo>
         <HeaderNavWrapper>
-          {NavItem.map(
-            (item) =>
-              item.isAuth && (
-                <li key={item.id}>
-                  <a href={item.path}>
-                    {item.image}
-                    &nbsp;{item.label}
-                  </a>
-                </li>
-              )
+          <li onClick={() => routeTo("/")}>Home</li>
+          {user === null ? (
+            <>
+              <li onClick={() => routeTo("/sign-in")}>Sign in</li>
+              <li onClick={() => routeTo("/sign-up")}>Sign up</li>
+            </>
+          ) : (
+            <>
+              <li onClick={() => routeTo("/editor")}>
+                <Icon icon="ion:compose" color="gray" />
+                New Article
+              </li>
+              <li onClick={() => routeTo("/setting")}>
+                <Icon icon="mdi:gear" color="gray" />
+                Setting
+              </li>
+            </>
           )}
-          {true && (
-            <HeaderUserProfile href={`/profile/lee12345`}>
-              <img
-                src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-                alt="user img"
-                width="26"
-                height="26"
-              />
-              <p>&nbsp;lee12345</p>
+          {user && (
+            <HeaderUserProfile>
+              <img src={user.image} alt="user img" width="26" height="26" />
+              <p onClick={() => routeTo(`/profile/${user.username}`)}>
+                &nbsp;{user.username}
+              </p>
             </HeaderUserProfile>
           )}
         </HeaderNavWrapper>
@@ -95,16 +59,16 @@ const HeaderContainer = styled.header`
   height: 56px;
   padding: 8px 16px;
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.COLOR_WHITE};
   div {
     display: flex;
     justify-content: space-between;
   }
 `;
 
-const HeaderLogo = styled.a`
-  text-decoration: none;
-  color: #5cb85c;
+const HeaderLogo = styled.p`
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.FONT_GREEN};
   font-size: 24px;
   font-weight: 700;
 `;
@@ -114,25 +78,25 @@ const HeaderNavWrapper = styled.ul`
   align-items: center;
   gap: 10px;
   li {
-    a {
-      color: gray;
-      display: flex;
-      align-items: center;
-      font-size: 16px;
-      &:hover {
-        color: black;
-      }
+    cursor: pointer;
+    color: gray;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    &:hover {
+      color: black;
     }
   }
 `;
 
-const HeaderUserProfile = styled.a`
+const HeaderUserProfile = styled.div`
   margin-left: 10px;
   display: flex;
   align-items: center;
-  color: gray;
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
+  cursor: pointer;
   &:hover {
-    color: black;
+    color: ${({ theme }) => theme.colors.FONT_BLACK};
   }
   img {
     border-radius: 50%;

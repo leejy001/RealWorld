@@ -7,7 +7,8 @@ import SignUp from "./pages/signup";
 import Article from "./pages/article";
 import Editor from "./pages/editor";
 import Setting from "./pages/setting";
-import User from "./pages/user";
+import Profile from "./pages/profile";
+import ProtectedRoute, { PrivateRouteProps } from "./utils/PrivateRoute";
 
 interface RouterElement {
   id: number;
@@ -15,6 +16,10 @@ interface RouterElement {
   element: React.ReactNode;
   withAuth: boolean;
 }
+
+const defaultProtectedRouteProps: Omit<PrivateRouteProps, "outlet"> = {
+  authenticationPath: "/sign-in"
+};
 
 const routerData: RouterElement[] = [
   {
@@ -37,38 +42,39 @@ const routerData: RouterElement[] = [
   },
   {
     id: 3,
-    path: "/article",
+    path: "/article/:slug",
     element: <Article />,
     withAuth: false
   },
   {
     id: 4,
-    path: "/editor",
-    element: <Editor />,
-    withAuth: false
+    path: "/editor/*",
+    element: (
+      <ProtectedRoute {...defaultProtectedRouteProps} outlet={<Editor />} />
+    ),
+    withAuth: true
   },
   {
     id: 5,
     path: "/setting",
-    element: <Setting />,
-    withAuth: false
+    element: (
+      <ProtectedRoute {...defaultProtectedRouteProps} outlet={<Setting />} />
+    ),
+    withAuth: true
   },
   {
     id: 6,
-    path: "/profile/:username",
-    element: <User />,
-    withAuth: false
+    path: "/profile/:username/*",
+    element: <Profile />,
+    withAuth: true
   }
 ];
 
 export const routers: RemixRouter = createBrowserRouter(
   routerData.map((router) => {
-    const isSignIn = router.withAuth || false;
     return {
       path: router.path,
-      element: (
-        <GeneralLayout isSignIn={isSignIn}>{router.element}</GeneralLayout>
-      )
+      element: <GeneralLayout>{router.element}</GeneralLayout>
     };
   })
 );

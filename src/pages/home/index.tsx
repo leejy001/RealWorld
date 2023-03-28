@@ -1,17 +1,22 @@
-import React from "react";
 import styled from "styled-components";
 import Container from "../../components/Container";
 import Banner from "./components/Banner";
 import FeedList from "./components/FeedList";
 import TagBar from "./components/TagBar";
+import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
+import { useState } from "react";
 
 function Home() {
+  const [tag, setTag] = useState<string>(
+    !getAccessTokenFromSessionStorage() ? "" : "my"
+  );
+
   return (
     <HomeContainer>
-      {true && <Banner />}
+      {!getAccessTokenFromSessionStorage() && <Banner />}
       <Container>
-        <FeedList />
-        <TagBar />
+        <FeedList tag={tag} setTag={setTag} />
+        <TagBar setTag={setTag} />
       </Container>
     </HomeContainer>
   );
@@ -20,8 +25,9 @@ function Home() {
 export default Home;
 
 const HomeContainer = styled.div`
-  padding-bottom: 66px;
-  div:nth-child(2) {
+  padding-top: 32px;
+  padding-bottom: 100px;
+  div:last-child {
     display: flex;
   }
 `;

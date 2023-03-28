@@ -1,35 +1,86 @@
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
+import { deleteArticleApi } from "../../../api/article";
+import { useRouter } from "../../../hooks/useRouter";
+import { ArticleInfo } from "../../../types/article";
 
 interface ArticleAuthorProps {
+  isUser: boolean;
   titleColor: string;
+  article: ArticleInfo;
+  favoritedClickHandler: () => Promise<void>;
+  followClickHandler: () => Promise<void>;
 }
 
-function ArticleAuthor({ titleColor }: ArticleAuthorProps) {
+function ArticleAuthor({
+  isUser,
+  titleColor,
+  article,
+  favoritedClickHandler,
+  followClickHandler
+}: ArticleAuthorProps) {
+  const { currentPath, routeTo } = useRouter();
+
+  const deleteArticleClickHandler = async () => {
+    const articleDeleteResult = await deleteArticleApi(
+      currentPath.split("/")[2]
+    );
+
+    if (articleDeleteResult === "fail") return;
+
+    routeTo("-1");
+  };
+
   return (
     <ArticleAuthorContainer>
-      <img
-        src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-        alt="user img"
-        width="32"
-        height="32"
-      />
+      <img src={article.author.image} alt="user img" width="32" height="32" />
       <ArticleUserInfo titleColor={titleColor}>
-        <p>
-          <a href="/@lee12345">lee12345</a>
+        <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
+          {article.author.username}
         </p>
-        <p>March 17, 2023</p>
+        <p>{article.createdAt}</p>
       </ArticleUserInfo>
-      <ButtonWrppaer>
-        <FollowButton>
-          <Icon icon="material-symbols:add" color="#ccc" />
-          <p>&nbsp;Follow lee12345</p>
-        </FollowButton>
-        <FavoriteButton>
-          <Icon icon="mdi:cards-heart" color="#5cb85c" />
-          <p>&nbsp;Favorite Article (659)</p>
-        </FavoriteButton>
-      </ButtonWrppaer>
+      {isUser ? (
+        <ButtonWrppaer>
+          <EditButton onClick={() => routeTo(`/editor/${article.slug}`)}>
+            <Icon icon="material-symbols:edit" color="#ccc" />
+            <p>&nbsp;Edit Article</p>
+          </EditButton>
+          <DeleteButton onClick={deleteArticleClickHandler}>
+            <Icon icon="mdi:trash" color="#b85c5c" />
+            <p>&nbsp;Delete Article</p>
+          </DeleteButton>
+        </ButtonWrppaer>
+      ) : (
+        <ButtonWrppaer>
+          <FollowButton
+            isFollowed={article.author.following}
+            onClick={followClickHandler}
+          >
+            <Icon
+              icon="material-symbols:add"
+              color={article.author.following ? "#000" : "#fff"}
+            />
+            <p>
+              &nbsp;{article.author.following ? "Unfollow" : "Follow"}{" "}
+              {article.author.username}
+            </p>
+          </FollowButton>
+          <FavoriteButton
+            isFavorited={article.favorited}
+            onClick={favoritedClickHandler}
+          >
+            <Icon
+              icon="mdi:cards-heart"
+              color={article.favorited ? "#fff" : "#5cb85c"}
+            />
+            <p>
+              &nbsp;{article.favorited ? "Unfavorite" : "Favorite"} Article (
+              {article.favoritesCount})
+            </p>
+          </FavoriteButton>
+        </ButtonWrppaer>
+      )}
     </ArticleAuthorContainer>
   );
 }
@@ -48,17 +99,16 @@ const ArticleAuthorContainer = styled.div`
 
 const ArticleUserInfo = styled.div<{ titleColor: string }>`
   p:nth-child(1) {
-    a {
-      font-size: 16px;
-      color: ${({ titleColor }) => titleColor};
-      &:hover {
-        text-decoration: underline;
-      }
+    font-size: 16px;
+    cursor: pointer;
+    color: ${({ titleColor }) => titleColor};
+    &:hover {
+      text-decoration: underline;
     }
   }
   p:nth-child(2) {
     font-size: 12px;
-    color: #bbb;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
   }
 `;
 
@@ -68,26 +118,60 @@ const ButtonWrppaer = styled.div`
   padding-left: 10px;
 `;
 
-const FollowButton = styled.button`
-  background-color: transparent;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+const EditButton = styled.button`
   display: flex;
   align-items: center;
-  color: #ccc;
   cursor: pointer;
   padding: 4px 8px;
-  font-size: 14px;
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
+  color: ${({ theme }) => theme.colors.FONT_GRAY};
 `;
 
-const FavoriteButton = styled.button`
-  background-color: transparent;
-  border: 1px solid #5cb85c;
-  border-radius: 3px;
+const DeleteButton = styled.button`
   display: flex;
   align-items: center;
-  color: #5cb85c;
   cursor: pointer;
   padding: 4px 8px;
-  font-size: 14px;
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_RED};
+  color: ${({ theme }) => theme.colors.FONT_RED};
+`;
+
+const FollowButton = styled.button<{ isFollowed: boolean }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: ${({ isFollowed, theme }) =>
+    isFollowed ? theme.colors.COLOR_GRAY : "transparent"};
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
+  border-radius: 3px;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
+  }
+  p {
+    color: ${({ isFollowed, theme }) =>
+      isFollowed ? theme.colors.FONT_BLACK : theme.colors.FONT_GRAY};
+    font-size: 14px;
+  }
+`;
+
+const FavoriteButton = styled.button<{ isFavorited: boolean }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: ${({ isFavorited, theme }) =>
+    isFavorited ? theme.colors.FONT_GREEN : "transparent"};
+  border: 1px solid ${({ theme }) => theme.colors.COLOR_GREEN};
+  border-radius: 3px;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.HOVER_GRAY};
+  }
+  p {
+    color: ${({ isFavorited, theme }) =>
+      isFavorited ? theme.colors.FONT_WHITE : theme.colors.FONT_GREEN};
+    font-size: 14px;
+  }
 `;

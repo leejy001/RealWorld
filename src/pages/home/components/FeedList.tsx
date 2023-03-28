@@ -1,39 +1,49 @@
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ListItem from "../../../components/ListItem";
+import ArticleList from "../../../components/ArticleList";
+import { getAccessTokenFromSessionStorage } from "../../../utils/accessTokenHandler";
 
-function FeedList() {
-  const [feed, setFeed] = useState("feed");
+interface TagProps {
+  tag: string;
+  setTag: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function FeedList({ tag, setTag }: TagProps) {
+  const [query, setQuery] = useState<string>("?");
+
+  useEffect(() => {
+    if (tag === "my") {
+      setQuery("/feed?");
+    } else if (tag !== "") {
+      setQuery(`?tag=${tag}&`);
+    } else {
+      setQuery("?");
+    }
+  }, [tag]);
+
   return (
     <FeedListContainer>
       <FeedListNav>
-        {false && (
+        {getAccessTokenFromSessionStorage() && (
           <li
-            className={feed === "my" ? "active" : ""}
-            onClick={() => setFeed("my")}
+            className={tag === "my" ? "active" : ""}
+            onClick={() => setTag("my")}
           >
             Your Feed
           </li>
         )}
-        <li
-          className={feed === "global" ? "active" : ""}
-          onClick={() => setFeed("global")}
-        >
+        <li className={tag === "" ? "active" : ""} onClick={() => setTag("")}>
           Global Feed
         </li>
-        {feed !== "my" && feed !== "global" && (
+        {tag !== "my" && tag !== "" && (
           <li className="active">
             <Icon icon="mdi:pound" color="#5cb85c" />
-            &nbsp;{feed}
+            &nbsp;{tag}
           </li>
         )}
       </FeedListNav>
-      <FeedListWrapper>
-        {[1, 2, 3, 4, 5].map((item) => (
-          <ListItem key={item} />
-        ))}
-      </FeedListWrapper>
+      <ArticleList query={query} />
     </FeedListContainer>
   );
 }
@@ -54,18 +64,16 @@ const FeedListNav = styled.ul`
     align-items: center;
     font-size: 16px;
     padding: 8px 16px;
-    color: #aaa;
+    color: ${({ theme }) => theme.colors.FONT_GRAY};
     cursor: pointer;
     margin-bottom: -1px;
     &:hover {
-      color: #373a3c;
+      color: ${({ theme }) => theme.colors.FONT_BLACK};
     }
   }
   li.active {
-    color: #5cb85c;
-    border-bottom: 2px solid #5cb85c;
+    color: ${({ theme }) => theme.colors.FONT_GREEN};
+    border-bottom: 2px solid ${({ theme }) => theme.colors.COLOR_GREEN};
   }
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.COLOR_GRAY};
 `;
-
-const FeedListWrapper = styled.ul``;

@@ -29,7 +29,7 @@ const FooterContainer = styled.footer`
   a {
     display: flex;
     align-items: center;
-    color: white;
+    color: ${({ theme }) => theme.colors.FONT_WHITE};
     text-decoration: none;
     font-size: 24px;
     &:hover {

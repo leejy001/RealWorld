@@ -1,15 +1,35 @@
-import React from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect
+} from "react";
 import styled from "styled-components";
+import { getUserInfoApi } from "../api/user";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { AuthContext, AuthContextInfo } from "../contexts/AuthContextProvider";
+import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
-interface GeneralLayoutProps {
-  children: React.ReactNode;
-  isSignIn: boolean;
-}
+function GeneralLayout({ children }: PropsWithChildren) {
+  const { setUserInfo } = useContext(AuthContext) as AuthContextInfo;
+  const token = getAccessTokenFromSessionStorage();
 
-function GeneralLayout({ children, isSignIn }: GeneralLayoutProps) {
-  if (isSignIn) return <div>SignIn first!!!</div>;
+  const getUserInfoFunc = useCallback(async () => {
+    const userRes = await getUserInfoApi();
+    if (userRes)
+      setUserInfo({
+        email: userRes?.user.email,
+        username: userRes?.user.username,
+        bio: userRes?.user.bio,
+        image: userRes?.user.image
+      });
+  }, [setUserInfo]);
+
+  useEffect(() => {
+    getUserInfoFunc();
+  }, [getUserInfoFunc, token]);
+
   return (
     <GeneralLayoutContainer>
       <Header />

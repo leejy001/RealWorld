@@ -1,20 +1,20 @@
 import styled from "styled-components";
 import Container from "../../components/Container";
-import ArticleList from "./components/ArticleList";
+import ArticleBody from "./components/ArticleBody";
 import ProfileBanner from "./components/ProfileBanner";
 
-function User() {
+function Profile() {
   return (
     <UserContainer>
       <ProfileBanner />
       <Container>
-        <ArticleList />
+        <ArticleBody />
       </Container>
     </UserContainer>
   );
 }
 
-export default User;
+export default Profile;
 
 const UserContainer = styled.div`
   padding-bottom: 66px;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { getArticlesInfoApi } from "../api/article";
 import { ArticleInfo, ArticlesResult } from "../types/article";
 import ListItem from "./ListItem";
+import Spinner from "./Spinner";
 
 interface ParentProps {
   query: string;
@@ -32,7 +33,7 @@ function ArticleList({ query }: ParentProps) {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
+        <Spinner size={50} />
       ) : (
         <ArticleListWrapper>
           {articles.map((item) => (

@@ -22,7 +22,7 @@ function SignUp() {
 
     if (signUpResult.status === "fail") return;
 
-    routeTo("/");
+    routeTo("-1");
   };
 
   return (

@@ -4,6 +4,7 @@ import { getArticleInfoApi } from "../../api/article";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
 import { followAuthorApi, unfollowAuthorApi } from "../../api/profile";
 import Container from "../../components/Container";
+import Spinner from "../../components/Spinner";
 import {
   AuthContext,
   AuthContextInfo
@@ -60,7 +61,7 @@ function Article() {
       <ArticleInfoBanner>
         <Container>
           {!article ? (
-            <p>Loading...</p>
+            <Spinner size={100} />
           ) : (
             <>
               <ArticleTitle>{article.title}</ArticleTitle>
@@ -76,7 +77,11 @@ function Article() {
         </Container>
       </ArticleInfoBanner>
       <Container>
-        <ArticleDetail>{article?.body}</ArticleDetail>
+        {!article ? (
+          <Spinner size={100} />
+        ) : (
+          <ArticleDetail>{article?.body}</ArticleDetail>
+        )}
         <ArticleTagList>
           {article?.tagList.map((item, index) => (
             <li key={index}>{item}</li>

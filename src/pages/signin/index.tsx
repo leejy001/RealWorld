@@ -21,7 +21,7 @@ function SignIn() {
 
     if (signInResult.status === "fail") return;
 
-    routeTo("/");
+    routeTo("-1");
   };
 
   return (

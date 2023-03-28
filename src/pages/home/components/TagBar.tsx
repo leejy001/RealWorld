@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { getTagApi } from "../../../api/tag";
+import Spinner from "../../../components/Spinner";
 
 interface TagProps {
   setTag: React.Dispatch<React.SetStateAction<string>>;
@@ -14,10 +15,6 @@ function TagBar({ setTag }: TagProps) {
     if (result?.tags) setTags(result?.tags);
   }, []);
 
-  const tagClickHandler = (tag: string) => {
-    setTag(tag);
-  };
-
   useEffect(() => {
     getTagsInfo();
   }, [getTagsInfo]);
@@ -30,13 +27,13 @@ function TagBar({ setTag }: TagProps) {
           {tags.length > 0 ? (
             <>
               {tags.map((item, index) => (
-                <li key={index} onClick={() => tagClickHandler(item)}>
+                <li key={index} onClick={() => setTag(item)}>
                   {item}
                 </li>
               ))}
             </>
           ) : (
-            <p>loading...</p>
+            <Spinner size={30} />
           )}
         </TagListWrapper>
       </TagBarWrapper>

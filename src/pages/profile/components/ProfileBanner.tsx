@@ -150,7 +150,7 @@ const FollowButton = styled.button<{ isFollowed: boolean }>`
   }
   p {
     color: ${({ isFollowed, theme }) =>
-      isFollowed ? theme.colors.FONT_WHITE : theme.colors.FONT_GRAY};
+      isFollowed ? theme.colors.FONT_BLACK : theme.colors.FONT_GRAY};
     font-size: 14px;
   }
 `;

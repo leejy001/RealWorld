@@ -35,7 +35,7 @@ export const deleteCommentApi = async (
   id: number
 ): Promise<string> => {
   const deleteCommentRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}/comments/${id}`,
+    `/articles/${slug}/comments/${id}`,
     { method: "DELETE" }
   );
 

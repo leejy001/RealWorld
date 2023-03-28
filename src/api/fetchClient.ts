@@ -1,5 +1,7 @@
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
+const baseUrl = "https://api.realworld.io/api";
+
 export const fetchClient = async (
   url: string,
   options: RequestInit
@@ -13,7 +15,7 @@ export const fetchClient = async (
         Authorization: `Bearer ${accessToken}`
       }
     };
-    return fetch(url, newOptions);
+    return fetch(`${baseUrl}${url}`, newOptions);
   } else {
     const newOptions = {
       ...options,
@@ -21,6 +23,6 @@ export const fetchClient = async (
         "Content-Type": "application/json"
       }
     };
-    return fetch(url, newOptions);
+    return fetch(`${baseUrl}${url}`, newOptions);
   }
 };

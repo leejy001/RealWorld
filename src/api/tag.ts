@@ -1,11 +1,9 @@
 import { TagResult } from "../types/tag";
+import { fetchClient } from "./fetchClient";
 
 export const getTagApi = async (): Promise<TagResult | null> => {
-  const tagRes = await fetch(`${process.env.REACT_APP_BASIC_URL}/tags`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
+  const tagRes = await fetchClient("/tags", {
+    method: "GET"
   });
 
   if (tagRes.ok) {

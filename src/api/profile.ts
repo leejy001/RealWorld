@@ -4,12 +4,9 @@ import { fetchClient } from "./fetchClient";
 export const getProfileApi = async (
   username: string
 ): Promise<ProfileResult | null> => {
-  const profileRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/profiles/${username}`,
-    {
-      method: "GET"
-    }
-  );
+  const profileRes = await fetchClient(`/profiles/${username}`, {
+    method: "GET"
+  });
 
   if (profileRes.ok) {
     return profileRes.json() as Promise<ProfileResult>;
@@ -19,12 +16,9 @@ export const getProfileApi = async (
 };
 
 export const followAuthorApi = async (username: string): Promise<string> => {
-  const followRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/profiles/${username}/follow`,
-    {
-      method: "POST"
-    }
-  );
+  const followRes = await fetchClient(`/profiles/${username}/follow`, {
+    method: "POST"
+  });
 
   if (followRes.ok) {
     return "success";
@@ -34,12 +28,9 @@ export const followAuthorApi = async (username: string): Promise<string> => {
 };
 
 export const unfollowAuthorApi = async (username: string): Promise<string> => {
-  const unfollowRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/profiles/${username}/follow`,
-    {
-      method: "DELETE"
-    }
-  );
+  const unfollowRes = await fetchClient(`/profiles/${username}/follow`, {
+    method: "DELETE"
+  });
 
   if (unfollowRes.ok) {
     return "success";

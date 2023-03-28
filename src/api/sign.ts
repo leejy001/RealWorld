@@ -7,20 +7,15 @@ import {
   SignUpResult
 } from "../types/sign";
 import { saveAccessTokenToSessionStorage } from "../utils/accessTokenHandler";
+import { fetchClient } from "./fetchClient";
 
 export const signinApi = async (
   args: SignRequest
 ): Promise<SignInResult | SignInError> => {
-  const signInRes = await fetch(
-    `${process.env.REACT_APP_BASIC_URL}/users/login`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(args)
-    }
-  );
+  const signInRes = await fetchClient("/users/login", {
+    method: "POST",
+    body: JSON.stringify(args)
+  });
 
   const signinResponseData = await signInRes.json();
 
@@ -34,11 +29,8 @@ export const signinApi = async (
 export const signupApi = async (
   args: SignUpRequest
 ): Promise<SignUpResult | SignUpError> => {
-  const signUpRes = await fetch(`${process.env.REACT_APP_BASIC_URL}/users`, {
+  const signUpRes = await fetchClient("/users", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: JSON.stringify(args)
   });
 

@@ -1,6 +1,6 @@
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
 
-const baseUrl = "https://api.realworld.io/api";
+const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
 
 export const fetchClient = async (
   url: string,

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { signupApi } from "../../api/sign";
 import Container from "../../components/Container";
@@ -27,6 +28,9 @@ function SignUp() {
 
   return (
     <Container>
+      <Helmet>
+        <title>SignUp - Conduit</title>
+      </Helmet>
       <SignUpContianer>
         <p>Sign up</p>
         <SignInButton onClick={() => routeTo("/sign-in")}>

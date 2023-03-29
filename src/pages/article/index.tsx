@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { getArticleInfoApi } from "../../api/article";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
@@ -58,6 +59,9 @@ function Article() {
 
   return (
     <ArticleContainer>
+      <Helmet>
+        <title>Article - Conduit</title>
+      </Helmet>
       <ArticleInfoBanner>
         <Container>
           {!article ? (

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import {
   getArticleInfoApi,
@@ -98,6 +99,9 @@ function Editor() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Editor - Conduit</title>
+      </Helmet>
       <NewArticleForm onSubmit={articleSubmitHandler}>
         <input
           type="text"

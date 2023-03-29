@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { putUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
@@ -58,6 +59,9 @@ function Setting() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Setting - Conduit</title>
+      </Helmet>
       <SettingWrapper>
         <SettingTitle>Your Settings</SettingTitle>
         <SettingsForm onSubmit={userInfoSubmitHandler}>

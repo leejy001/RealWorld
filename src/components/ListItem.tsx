@@ -5,6 +5,7 @@ import { favoriteApi, unfavoriteApi } from "../api/favorite";
 import { useRouter } from "../hooks/useRouter";
 import { ArticleInfo } from "../types/article";
 import { getAccessTokenFromSessionStorage } from "../utils/accessTokenHandler";
+import { changeDateFormat } from "../utils/changeDateFormatHandler";
 
 interface ArticleProps {
   article: ArticleInfo;
@@ -56,7 +57,9 @@ function ListItem({ article }: ArticleProps) {
             >
               {article.author.username}
             </ListItemAuthor>
-            <ListItemCreateAt>March 17, 2023</ListItemCreateAt>
+            <ListItemCreateAt>{`${changeDateFormat(
+              article.createdAt
+            )}`}</ListItemCreateAt>
           </div>
         </ListItemHeaderInfo>
         <FavoriteButton

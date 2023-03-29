@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { deleteArticleApi } from "../../../api/article";
 import { useRouter } from "../../../hooks/useRouter";
 import { ArticleInfo } from "../../../types/article";
+import { changeDateFormat } from "../../../utils/changeDateFormatHandler";
 
 interface ArticleAuthorProps {
   isUser: boolean;
@@ -38,7 +39,7 @@ function ArticleAuthor({
         <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
           {article.author.username}
         </p>
-        <p>{article.createdAt}</p>
+        <p>{`${changeDateFormat(article.createdAt)}`}</p>
       </ArticleUserInfo>
       {isUser ? (
         <ButtonWrppaer>

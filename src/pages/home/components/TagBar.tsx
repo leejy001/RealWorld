@@ -10,7 +10,6 @@ interface TagProps {
 function TagBar({ setTag }: TagProps) {
   const [scrollHeight, setScrollHeight] = useState(0);
   const { isLoading, data } = useTagsQuery();
-  console.log(isLoading, data);
 
   const onScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

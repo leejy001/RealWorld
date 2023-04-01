@@ -8,7 +8,7 @@ import { fetchClient } from "./fetchClient";
 
 export const getArticlesInfoApi = async (
   query: string
-): Promise<ArticlesResult | null> => {
+): Promise<ArticlesResult> => {
   const articlesInfoRes = await fetchClient(`/articles${query}`, {
     method: "GET"
   });
@@ -16,7 +16,7 @@ export const getArticlesInfoApi = async (
   if (articlesInfoRes.ok) {
     return articlesInfoRes.json() as Promise<ArticlesResult>;
   }
-  return null;
+  return { articles: [], articlesCount: 0 };
 };
 
 export const getArticleInfoApi = async (

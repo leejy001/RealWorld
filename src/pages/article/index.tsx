@@ -14,26 +14,25 @@ import Comments from "./components/Comments";
 import useArticleQuery from "../../hooks/article/useArticleQuery";
 import useFollowMutation from "../../hooks/profile/useFollowMutation";
 import useUnfollowMutation from "../../hooks/profile/useUnfollowMutation";
+import useFavoriteMutation from "../../hooks/favorite/useFavoriteMutation";
+import useUnfavoriteMutation from "../../hooks/favorite/useUnfavoriteMutation";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
   const { user } = useContext(AuthContext) as AuthContextInfo;
-  const { isLoading, data, refetch } = useArticleQuery(
-    currentPath.split("/")[2]
-  );
+  const { isLoading, data } = useArticleQuery(currentPath.split("/")[2]);
   const { mutate: followMutate } = useFollowMutation();
   const { mutate: unfollowMutate } = useUnfollowMutation();
+  const { mutate: favoriteMutate } = useFavoriteMutation();
+  const { mutate: unfavoriteMutate } = useUnfavoriteMutation();
 
   const favoritedClickHandler = async () => {
     if (!user) return routeTo("/sign-in");
     if (data?.article?.favorited) {
-      const deleteRes = await unfavoriteApi(currentPath.split("/")[2]);
-      // if (deleteRes === "success") return getArticleInfo();
-      return;
+      unfavoriteMutate(currentPath.split("/")[2]);
+    } else {
+      favoriteMutate(currentPath.split("/")[2]);
     }
-    const postRes = await favoriteApi(currentPath.split("/")[2]);
-    // if (postRes === "success") return getArticleInfo();
-    return;
   };
 
   const followClickHandler = () => {
@@ -44,12 +43,6 @@ function Article() {
       followMutate(data.article?.author.username);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      refetch();
-    };
-  }, [refetch]);
 
   return (
     <ArticleContainer>

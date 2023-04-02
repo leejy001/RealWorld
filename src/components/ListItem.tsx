@@ -25,7 +25,7 @@ function ListItem({ article }: ArticleProps) {
     if (!getAccessTokenFromSessionStorage()) {
       return routeTo("/sign-in");
     }
-    if (article?.favorited) {
+    if (isFavorited) {
       const deleteRes = await unfavoriteApi(article.slug);
       if (deleteRes === "success") {
         setIsFavorited(false);

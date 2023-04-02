@@ -9,7 +9,7 @@ interface ArticleAuthorProps {
   isUser?: boolean;
   titleColor: string;
   article?: ArticleInfo;
-  favoritedClickHandler: () => Promise<void>;
+  favoritedClickHandler: () => void;
   followClickHandler: () => void;
 }
 

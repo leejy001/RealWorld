@@ -6,9 +6,9 @@ import { ArticleInfo } from "../../../types/article";
 import { changeDateFormat } from "../../../utils/changeDateFormatHandler";
 
 interface ArticleAuthorProps {
-  isUser: boolean;
+  isUser?: boolean;
   titleColor: string;
-  article: ArticleInfo;
+  article?: ArticleInfo;
   favoritedClickHandler: () => Promise<void>;
   followClickHandler: () => Promise<void>;
 }
@@ -33,56 +33,65 @@ function ArticleAuthor({
   };
 
   return (
-    <ArticleAuthorContainer>
-      <img src={article.author.image} alt="user img" width="32" height="32" />
-      <ArticleUserInfo titleColor={titleColor}>
-        <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
-          {article.author.username}
-        </p>
-        <p>{`${changeDateFormat(article.createdAt)}`}</p>
-      </ArticleUserInfo>
-      {isUser ? (
-        <ButtonWrppaer>
-          <EditButton onClick={() => routeTo(`/editor/${article.slug}`)}>
-            <Icon icon="material-symbols:edit" color="#ccc" />
-            <p>&nbsp;Edit Article</p>
-          </EditButton>
-          <DeleteButton onClick={deleteArticleClickHandler}>
-            <Icon icon="mdi:trash" color="#b85c5c" />
-            <p>&nbsp;Delete Article</p>
-          </DeleteButton>
-        </ButtonWrppaer>
-      ) : (
-        <ButtonWrppaer>
-          <FollowButton
-            isFollowed={article.author.following}
-            onClick={followClickHandler}
-          >
-            <Icon
-              icon="material-symbols:add"
-              color={article.author.following ? "#000" : "#fff"}
-            />
-            <p>
-              &nbsp;{article.author.following ? "Unfollow" : "Follow"}{" "}
+    <>
+      {article && (
+        <ArticleAuthorContainer>
+          <img
+            src={article.author.image}
+            alt="user img"
+            width="32"
+            height="32"
+          />
+          <ArticleUserInfo titleColor={titleColor}>
+            <p onClick={() => routeTo(`/profile/${article.author.username}`)}>
               {article.author.username}
             </p>
-          </FollowButton>
-          <FavoriteButton
-            isFavorited={article.favorited}
-            onClick={favoritedClickHandler}
-          >
-            <Icon
-              icon="mdi:cards-heart"
-              color={article.favorited ? "#fff" : "#5cb85c"}
-            />
-            <p>
-              &nbsp;{article.favorited ? "Unfavorite" : "Favorite"} Article (
-              {article.favoritesCount})
-            </p>
-          </FavoriteButton>
-        </ButtonWrppaer>
+            <p>{`${changeDateFormat(article.createdAt)}`}</p>
+          </ArticleUserInfo>
+          {isUser ? (
+            <ButtonWrppaer>
+              <EditButton onClick={() => routeTo(`/editor/${article.slug}`)}>
+                <Icon icon="material-symbols:edit" color="#ccc" />
+                <p>&nbsp;Edit Article</p>
+              </EditButton>
+              <DeleteButton onClick={deleteArticleClickHandler}>
+                <Icon icon="mdi:trash" color="#b85c5c" />
+                <p>&nbsp;Delete Article</p>
+              </DeleteButton>
+            </ButtonWrppaer>
+          ) : (
+            <ButtonWrppaer>
+              <FollowButton
+                isFollowed={article.author.following}
+                onClick={followClickHandler}
+              >
+                <Icon
+                  icon="material-symbols:add"
+                  color={article.author.following ? "#000" : "#fff"}
+                />
+                <p>
+                  &nbsp;{article.author.following ? "Unfollow" : "Follow"}{" "}
+                  {article.author.username}
+                </p>
+              </FollowButton>
+              <FavoriteButton
+                isFavorited={article.favorited}
+                onClick={favoritedClickHandler}
+              >
+                <Icon
+                  icon="mdi:cards-heart"
+                  color={article.favorited ? "#fff" : "#5cb85c"}
+                />
+                <p>
+                  &nbsp;{article.favorited ? "Unfavorite" : "Favorite"} Article
+                  ({article.favoritesCount})
+                </p>
+              </FavoriteButton>
+            </ButtonWrppaer>
+          )}
+        </ArticleAuthorContainer>
       )}
-    </ArticleAuthorContainer>
+    </>
   );
 }
 

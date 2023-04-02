@@ -1,7 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import { getArticleInfoApi } from "../../api/article";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
 import { followAuthorApi, unfollowAuthorApi } from "../../api/profile";
 import Container from "../../components/Container";
@@ -11,51 +10,47 @@ import {
   AuthContextInfo
 } from "../../contexts/AuthContextProvider";
 import { useRouter } from "../../hooks/useRouter";
-import { ArticleInfo } from "../../types/article";
 import ArticleAuthor from "./components/ArticleAuthor";
 import Comments from "./components/Comments";
+import useArticleQuery from "../../hooks/article/useArticleQuery";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
   const { user } = useContext(AuthContext) as AuthContextInfo;
-  const [article, setArticle] = useState<ArticleInfo | null>(null);
-  const [isUser, setIsUser] = useState<boolean>(false);
+  const { isLoading, data, refetch } = useArticleQuery(
+    currentPath.split("/")[2]
+  );
+  console.log(data);
 
   const favoritedClickHandler = async () => {
     if (!user) return routeTo("/sign-in");
-    if (article?.favorited) {
+    if (data?.article?.favorited) {
       const deleteRes = await unfavoriteApi(currentPath.split("/")[2]);
-      if (deleteRes === "success") return getArticleInfo();
+      // if (deleteRes === "success") return getArticleInfo();
       return;
     }
     const postRes = await favoriteApi(currentPath.split("/")[2]);
-    if (postRes === "success") return getArticleInfo();
+    // if (postRes === "success") return getArticleInfo();
     return;
   };
 
   const followClickHandler = async () => {
     if (!user) return routeTo("/sign-in");
-    if (article && article?.author.following) {
-      const unfollowRes = await unfollowAuthorApi(article.author.username);
-      if (unfollowRes === "success") return getArticleInfo();
-    } else if (article && !article.author.following) {
-      const followRes = await followAuthorApi(article?.author.username);
-      if (followRes === "success") return getArticleInfo();
+    if (data?.article && data.article?.author.following) {
+      const unfollowRes = await unfollowAuthorApi(data.article.author.username);
+      // if (unfollowRes === "success") return getArticleInfo();
+    } else if (data?.article && !data.article.author.following) {
+      const followRes = await followAuthorApi(data.article?.author.username);
+      // if (followRes === "success") return getArticleInfo();
     }
     return;
   };
 
-  const getArticleInfo = useCallback(async () => {
-    const result = await getArticleInfoApi(currentPath.split("/")[2]);
-    if (result?.article) {
-      setArticle(result?.article);
-      setIsUser(user?.username === result.article.author.username);
-    }
-  }, [currentPath, user?.username]);
-
   useEffect(() => {
-    getArticleInfo();
-  }, [getArticleInfo]);
+    return () => {
+      refetch();
+    };
+  }, [refetch]);
 
   return (
     <ArticleContainer>
@@ -64,14 +59,14 @@ function Article() {
       </Helmet>
       <ArticleInfoBanner>
         <Container>
-          {!article ? (
+          {isLoading ? (
             <Spinner size={100} />
           ) : (
             <>
-              <ArticleTitle>{article.title}</ArticleTitle>
+              <ArticleTitle>{data?.article?.title}</ArticleTitle>
               <ArticleAuthor
-                isUser={isUser}
-                article={article}
+                isUser={data?.isUser}
+                article={data?.article}
                 titleColor={"#fff"}
                 favoritedClickHandler={favoritedClickHandler}
                 followClickHandler={followClickHandler}
@@ -81,22 +76,22 @@ function Article() {
         </Container>
       </ArticleInfoBanner>
       <Container>
-        {!article ? (
+        {isLoading ? (
           <Spinner size={100} />
         ) : (
-          <ArticleDetail>{article?.body}</ArticleDetail>
+          <ArticleDetail>{data?.article?.body}</ArticleDetail>
         )}
         <ArticleTagList>
-          {article?.tagList.map((item, index) => (
+          {data?.article?.tagList.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
         </ArticleTagList>
         <AritcleDivide />
         <AritcleAuthorWrapper>
-          {article && (
+          {!isLoading && (
             <ArticleAuthor
-              isUser={isUser}
-              article={article}
+              isUser={data?.isUser}
+              article={data?.article}
               titleColor={"#5cb85c"}
               favoritedClickHandler={favoritedClickHandler}
               followClickHandler={followClickHandler}

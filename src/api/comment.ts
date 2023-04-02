@@ -4,10 +4,9 @@ import { fetchClient } from "./fetchClient";
 export const getCommentsInfoApi = async (
   slug: string
 ): Promise<CommentsResult | null> => {
-  const commentsInfoRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}/comments`,
-    { method: "GET" }
-  );
+  const commentsInfoRes = await fetchClient(`/articles/${slug}/comments`, {
+    method: "GET"
+  });
 
   if (commentsInfoRes.ok) {
     return commentsInfoRes.json() as Promise<CommentsResult>;
@@ -19,10 +18,10 @@ export const postCommentApi = async (
   slug: string,
   body: string
 ): Promise<string> => {
-  const postCommentRes = await fetchClient(
-    `${process.env.REACT_APP_BASIC_URL}/articles/${slug}/comments`,
-    { method: "POST", body: JSON.stringify({ comment: { body } }) }
-  );
+  const postCommentRes = await fetchClient(`/articles/${slug}/comments`, {
+    method: "POST",
+    body: JSON.stringify({ comment: { body } })
+  });
 
   if (postCommentRes.ok) {
     return "success";

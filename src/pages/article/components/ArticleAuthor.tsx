@@ -10,7 +10,7 @@ interface ArticleAuthorProps {
   titleColor: string;
   article?: ArticleInfo;
   favoritedClickHandler: () => Promise<void>;
-  followClickHandler: () => Promise<void>;
+  followClickHandler: () => void;
 }
 
 function ArticleAuthor({

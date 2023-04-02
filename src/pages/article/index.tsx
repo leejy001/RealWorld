@@ -1,8 +1,7 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { unfavoriteApi, favoriteApi } from "../../api/favorite";
-import { followAuthorApi, unfollowAuthorApi } from "../../api/profile";
 import Container from "../../components/Container";
 import Spinner from "../../components/Spinner";
 import {
@@ -13,6 +12,8 @@ import { useRouter } from "../../hooks/useRouter";
 import ArticleAuthor from "./components/ArticleAuthor";
 import Comments from "./components/Comments";
 import useArticleQuery from "../../hooks/article/useArticleQuery";
+import useFollowMutation from "../../hooks/profile/useFollowMutation";
+import useUnfollowMutation from "../../hooks/profile/useUnfollowMutation";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
@@ -20,7 +21,8 @@ function Article() {
   const { isLoading, data, refetch } = useArticleQuery(
     currentPath.split("/")[2]
   );
-  console.log(data);
+  const { mutate: followMutate } = useFollowMutation();
+  const { mutate: unfollowMutate } = useUnfollowMutation();
 
   const favoritedClickHandler = async () => {
     if (!user) return routeTo("/sign-in");
@@ -34,16 +36,13 @@ function Article() {
     return;
   };
 
-  const followClickHandler = async () => {
+  const followClickHandler = () => {
     if (!user) return routeTo("/sign-in");
     if (data?.article && data.article?.author.following) {
-      const unfollowRes = await unfollowAuthorApi(data.article.author.username);
-      // if (unfollowRes === "success") return getArticleInfo();
+      unfollowMutate(data.article.author.username);
     } else if (data?.article && !data.article.author.following) {
-      const followRes = await followAuthorApi(data.article?.author.username);
-      // if (followRes === "success") return getArticleInfo();
+      followMutate(data.article?.author.username);
     }
-    return;
   };
 
   useEffect(() => {

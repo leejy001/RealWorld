@@ -1,9 +1,9 @@
-import { Icon } from "@iconify/react";
 import styled from "styled-components";
-import { deleteArticleApi } from "../../../api/article";
+import { Icon } from "@iconify/react";
 import { useRouter } from "../../../hooks/useRouter";
 import { ArticleInfo } from "../../../types/article";
 import { changeDateFormat } from "../../../utils/changeDateFormatHandler";
+import useDeleteArticleMutation from "../../../hooks/article/useDeleteArticleMutation";
 
 interface ArticleAuthorProps {
   isUser?: boolean;
@@ -21,15 +21,10 @@ function ArticleAuthor({
   followClickHandler
 }: ArticleAuthorProps) {
   const { currentPath, routeTo } = useRouter();
+  const { mutate } = useDeleteArticleMutation();
 
-  const deleteArticleClickHandler = async () => {
-    const articleDeleteResult = await deleteArticleApi(
-      currentPath.split("/")[2]
-    );
-
-    if (articleDeleteResult === "fail") return;
-
-    routeTo("-1");
+  const deleteArticleClickHandler = () => {
+    mutate(currentPath.split("/")[2]);
   };
 
   return (

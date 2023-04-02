@@ -2,7 +2,8 @@ import {
   ArticleRequest,
   ArticleResult,
   ArticlesResult,
-  ArticleEditResult
+  ArticleEditResult,
+  ArticleEditRequest
 } from "../types/article";
 import { fetchClient } from "./fetchClient";
 
@@ -51,12 +52,12 @@ export const postArticleApi = async (
 };
 
 export const putArticleApi = async (
-  slug: string,
-  args: ArticleRequest
+  args: ArticleEditRequest
 ): Promise<ArticleEditResult> => {
-  const articlePutRes = await fetchClient(`/articles/${slug}`, {
+  const { title, description, body, tagList } = args;
+  const articlePutRes = await fetchClient(`/articles/${args.slug}`, {
     method: "PUT",
-    body: JSON.stringify({ article: args })
+    body: JSON.stringify({ article: { title, description, body, tagList } })
   });
 
   const articlePutResponseData = await articlePutRes.json();

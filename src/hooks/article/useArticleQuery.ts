@@ -15,7 +15,8 @@ const useArticleQuery = (slug: string) => {
         isUser: user?.username === data?.article.author.username,
         ...data
       };
-    }
+    },
+    enabled: !!slug
   });
 };
 

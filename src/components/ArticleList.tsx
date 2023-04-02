@@ -13,7 +13,7 @@ function ArticleList({ query }: ParentProps) {
   const { isLoading, isFetching, data, fetchNextPage, hasNextPage } =
     useArticlesQuery(query);
   const mergeArticles = useMemo(
-    () => data && data.pages.flatMap((page) => page.articles),
+    () => data?.pages.flatMap((page) => page.articles),
     [data]
   );
 

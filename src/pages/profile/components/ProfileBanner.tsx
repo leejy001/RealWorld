@@ -1,82 +1,68 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
-import {
-  followAuthorApi,
-  getProfileApi,
-  unfollowAuthorApi
-} from "../../../api/profile";
-import { ProfileResult } from "../../../types/profile";
 import { useRouter } from "../../../hooks/useRouter";
 import {
   AuthContext,
   AuthContextInfo
 } from "../../../contexts/AuthContextProvider";
+import { useProfileFollowMutation } from "../../../hooks/profile/useFollowMutation";
+import { useProfileUnfollowMutation } from "../../../hooks/profile/useUnfollowMutation";
+import useProfileQuery from "../../../hooks/profile/useProfileQuery";
+import Spinner from "../../../components/Spinner";
 
 function ProfileBanner() {
   const { user } = useContext(AuthContext) as AuthContextInfo;
   const { currentPath, routeTo } = useRouter();
-  const [isCurrent, setIsCurrent] = useState<boolean>(false);
-  const [profile, setProfile] = useState<ProfileResult | null>(null);
+  const { isLoading, data } = useProfileQuery(currentPath.split("/")[2]);
+  const { mutate: followMutate } = useProfileFollowMutation();
+  const { mutate: unfollowMutate } = useProfileUnfollowMutation();
 
-  const followClickHandler = async () => {
+  const followClickHandler = () => {
     if (!user) return routeTo("/sign-in");
-    if (profile && profile?.profile.following) {
-      const unfollowRes = await unfollowAuthorApi(profile?.profile.username);
-      if (unfollowRes === "success") return getUserProfileInfo();
-    } else if (profile && !profile.profile.following) {
-      const followRes = await followAuthorApi(profile?.profile.username);
-      if (followRes === "success") return getUserProfileInfo();
+    if (data?.profile && data.profile.following) {
+      unfollowMutate(data?.profile.username);
+    } else if (data?.profile && !data.profile.following) {
+      followMutate(data?.profile.username);
     }
-    return;
   };
-
-  const getUserProfileInfo = useCallback(async () => {
-    const profileUser = await getProfileApi(currentPath.split("/")[2]);
-    setProfile(profileUser);
-    if (user) {
-      setIsCurrent(user.username === profileUser?.profile.username);
-    }
-  }, [currentPath, user]);
-
-  useEffect(() => {
-    getUserProfileInfo();
-  }, [getUserProfileInfo]);
 
   return (
     <ProfileBannerContainer>
-      {profile && (
+      {!isLoading && data?.profile ? (
         <Container>
           <img
-            src={profile.profile.image}
+            src={data.profile.image}
             alt="user img"
             width="100"
             height="100"
           />
-          <ProfileName>{profile.profile.username}</ProfileName>
-          <ProfileBio>{profile.profile.bio}</ProfileBio>
-          {isCurrent ? (
+          <ProfileName>{data.profile.username}</ProfileName>
+          <ProfileBio>{data.profile.bio}</ProfileBio>
+          {data.isUser ? (
             <EditProfileButton onClick={() => routeTo("/setting")}>
               <Icon icon="mdi:gear" color="gray" />
               <p>&nbsp;Edit Profile Settings</p>
             </EditProfileButton>
           ) : (
             <FollowButton
-              isFollowed={profile.profile.following}
+              isFollowed={data.profile.following}
               onClick={followClickHandler}
             >
               <Icon
                 icon="material-symbols:add"
-                color={profile.profile.following ? "#000" : "gray"}
+                color={data.profile.following ? "#000" : "gray"}
               />
               <p>
-                &nbsp;{profile.profile.following ? "Unfollow" : "Follow"}{" "}
-                {profile.profile.username}
+                &nbsp;{data.profile.following ? "Unfollow" : "Follow"}{" "}
+                {data.profile.username}
               </p>
             </FollowButton>
           )}
         </Container>
+      ) : (
+        <Spinner size={100} />
       )}
     </ProfileBannerContainer>
   );

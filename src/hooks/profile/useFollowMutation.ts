@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { followAuthorApi } from "../../api/profile";
 
-const useFollowMutation = () => {
+export const useArticleFollowMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(followAuthorApi, {
     onSuccess: () => {
@@ -10,4 +10,11 @@ const useFollowMutation = () => {
   });
 };
 
-export default useFollowMutation;
+export const useProfileFollowMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation(followAuthorApi, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["profile"]);
+    }
+  });
+};

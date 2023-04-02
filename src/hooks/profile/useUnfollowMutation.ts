@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { unfollowAuthorApi } from "../../api/profile";
 
-const useUnfollowMutation = () => {
+export const useArticleUnfollowMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(unfollowAuthorApi, {
     onSuccess: () => {
@@ -10,4 +10,11 @@ const useUnfollowMutation = () => {
   });
 };
 
-export default useUnfollowMutation;
+export const useProfileUnfollowMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation(unfollowAuthorApi, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["profile"]);
+    }
+  });
+};

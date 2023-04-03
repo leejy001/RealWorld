@@ -1,20 +1,16 @@
-import { useContext } from "react";
 import { Icon } from "@iconify/react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
 import { useRouter } from "../../../hooks/useRouter";
-import {
-  AuthContext,
-  AuthContextInfo
-} from "../../../contexts/AuthContextProvider";
 import { useProfileFollowMutation } from "../../../hooks/profile/useFollowMutation";
 import { useProfileUnfollowMutation } from "../../../hooks/profile/useUnfollowMutation";
 import useProfileQuery from "../../../hooks/profile/useProfileQuery";
 import Spinner from "../../../components/Spinner";
+import useUserQuery from "../../../hooks/user/useUserQuery";
 
 function ProfileBanner() {
-  const { user } = useContext(AuthContext) as AuthContextInfo;
   const { currentPath, routeTo } = useRouter();
+  const { data: user } = useUserQuery();
   const { isLoading, data } = useProfileQuery(currentPath.split("/")[2]);
   const { mutate: followMutate } = useProfileFollowMutation();
   const { mutate: unfollowMutate } = useProfileUnfollowMutation();

@@ -1,12 +1,7 @@
-import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import Container from "../../components/Container";
 import Spinner from "../../components/Spinner";
-import {
-  AuthContext,
-  AuthContextInfo
-} from "../../contexts/AuthContextProvider";
 import { useRouter } from "../../hooks/useRouter";
 import ArticleAuthor from "./components/ArticleAuthor";
 import Comments from "./components/Comments";
@@ -15,11 +10,12 @@ import { useArticleFollowMutation } from "../../hooks/profile/useFollowMutation"
 import { useArticleUnfollowMutation } from "../../hooks/profile/useUnfollowMutation";
 import useFavoriteMutation from "../../hooks/favorite/useFavoriteMutation";
 import useUnfavoriteMutation from "../../hooks/favorite/useUnfavoriteMutation";
+import useUserQuery from "../../hooks/user/useUserQuery";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
-  const { user } = useContext(AuthContext) as AuthContextInfo;
   const { isLoading, data } = useArticleQuery(currentPath.split("/")[2]);
+  const { data: user } = useUserQuery();
   const { mutate: followMutate } = useArticleFollowMutation();
   const { mutate: unfollowMutate } = useArticleUnfollowMutation();
   const { mutate: favoriteMutate } = useFavoriteMutation();

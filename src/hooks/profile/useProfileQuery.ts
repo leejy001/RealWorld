@@ -1,14 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProfileApi } from "../../api/profile";
 import { ProfileResult } from "../../types/profile";
-import { useContext } from "react";
-import {
-  AuthContext,
-  AuthContextInfo
-} from "../../contexts/AuthContextProvider";
+import useUserQuery from "../user/useUserQuery";
 
 const useProfileQuery = (username: string) => {
-  const { user } = useContext(AuthContext) as AuthContextInfo;
+  const { data: user } = useUserQuery();
   return useQuery(["profile", username], () => getProfileApi(username), {
     select: (data: ProfileResult | null) => {
       return {

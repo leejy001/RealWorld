@@ -1,10 +1,10 @@
 import {
   SignRequest,
   SignInResult,
-  SignInError,
   SignUpRequest,
+  SignUpResult,
   SignUpError,
-  SignUpResult
+  SignInError
 } from "../types/sign";
 import { saveAccessTokenToSessionStorage } from "../utils/accessTokenHandler";
 import { fetchClient } from "./fetchClient";
@@ -19,11 +19,15 @@ export const signinApi = async (
 
   const signinResponseData = await signInRes.json();
 
-  if (signInRes.ok) {
-    saveAccessTokenToSessionStorage(signinResponseData.user.token);
-    return { status: "success", ...signinResponseData };
+  if (!signInRes.ok) {
+    return {
+      status: "fail",
+      message: `${Object.keys(signinResponseData.errors)} does not exist.`
+    };
   }
-  return { status: "fail", ...signinResponseData };
+
+  saveAccessTokenToSessionStorage(signinResponseData.user.token);
+  return { status: "success", ...signinResponseData };
 };
 
 export const signupApi = async (
@@ -36,9 +40,13 @@ export const signupApi = async (
 
   const signupResponseData = await signUpRes.json();
 
-  if (signUpRes.ok) {
-    saveAccessTokenToSessionStorage(signupResponseData.user.token);
-    return { status: "success", ...signupResponseData };
+  if (!signUpRes.ok) {
+    return {
+      status: "fail",
+      message: `${Object.keys(signupResponseData.errors)} already been taken.`
+    };
   }
-  return { status: "fail", ...signupResponseData };
+
+  saveAccessTokenToSessionStorage(signupResponseData.user.token);
+  return { status: "success", ...signupResponseData };
 };

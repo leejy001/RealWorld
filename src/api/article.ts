@@ -2,13 +2,14 @@ import {
   ArticleRequest,
   ArticleResult,
   ArticlesResult,
-  ArticleEditResult
+  ArticleEditResult,
+  ArticleEditRequest
 } from "../types/article";
 import { fetchClient } from "./fetchClient";
 
 export const getArticlesInfoApi = async (
   query: string
-): Promise<ArticlesResult | null> => {
+): Promise<ArticlesResult> => {
   const articlesInfoRes = await fetchClient(`/articles${query}`, {
     method: "GET"
   });
@@ -16,7 +17,7 @@ export const getArticlesInfoApi = async (
   if (articlesInfoRes.ok) {
     return articlesInfoRes.json() as Promise<ArticlesResult>;
   }
-  return null;
+  return { articles: [], articlesCount: 0 };
 };
 
 export const getArticleInfoApi = async (
@@ -51,12 +52,12 @@ export const postArticleApi = async (
 };
 
 export const putArticleApi = async (
-  slug: string,
-  args: ArticleRequest
+  args: ArticleEditRequest
 ): Promise<ArticleEditResult> => {
-  const articlePutRes = await fetchClient(`/articles/${slug}`, {
+  const { title, description, body, tagList } = args;
+  const articlePutRes = await fetchClient(`/articles/${args.slug}`, {
     method: "PUT",
-    body: JSON.stringify({ article: args })
+    body: JSON.stringify({ article: { title, description, body, tagList } })
   });
 
   const articlePutResponseData = await articlePutRes.json();

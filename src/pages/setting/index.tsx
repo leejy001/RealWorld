@@ -1,30 +1,21 @@
-import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import { putUserInfoApi } from "../../api/user";
 import Container from "../../components/Container";
-import {
-  AuthContext,
-  AuthContextInfo
-} from "../../contexts/AuthContextProvider";
 import { useRouter } from "../../hooks/useRouter";
-import {
-  removeAccessTokenFromSessionStorage,
-  saveAccessTokenToSessionStorage
-} from "../../utils/accessTokenHandler";
+import { removeAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
+import useUserQuery from "../../hooks/user/useUserQuery";
+import useEditUserMutation from "../../hooks/user/useEditUserMutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Setting() {
+  const queryClient = useQueryClient();
   const { routeTo } = useRouter();
-  const { user, setUserInfo } = useContext(AuthContext) as AuthContextInfo;
+  const { data } = useUserQuery();
+  const { mutate } = useEditUserMutation();
 
   const signOutClickHandler = () => {
     removeAccessTokenFromSessionStorage();
-    setUserInfo({
-      email: "",
-      username: "",
-      bio: "",
-      image: ""
-    });
+    queryClient.invalidateQueries(["user"]);
     routeTo("/");
   };
 
@@ -34,7 +25,7 @@ function Setting() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const userInfoResult = await putUserInfoApi({
+    mutate({
       user: {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
@@ -43,18 +34,6 @@ function Setting() {
         image: formData.get("image") as string
       }
     });
-
-    if (userInfoResult === null) return;
-
-    saveAccessTokenToSessionStorage(userInfoResult.user.token);
-    setUserInfo({
-      email: userInfoResult.user.username,
-      username: userInfoResult.user.username,
-      bio: userInfoResult.user.bio,
-      image: userInfoResult.user.image
-    });
-
-    routeTo("/");
   };
 
   return (
@@ -70,26 +49,26 @@ function Setting() {
             name="image"
             placeholder="URL of profile picture"
             autoComplete="false"
-            defaultValue={user?.image}
+            defaultValue={data?.image}
           />
           <input
             type="text"
             name="username"
             placeholder="Username"
             autoComplete="false"
-            defaultValue={user?.username}
+            defaultValue={data?.username}
           />
           <textarea
             name="bio"
             placeholder="Short bio about you"
-            defaultValue={user?.bio}
+            defaultValue={data?.bio}
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             autoComplete="false"
-            defaultValue={user?.email}
+            defaultValue={data?.email}
           />
           <input
             type="password"

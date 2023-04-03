@@ -14,11 +14,7 @@ export interface SignInResult {
 
 export interface SignInError {
   status: string;
-  errors: {
-    email?: string[];
-    password?: string[];
-    "email or password"?: string[];
-  };
+  message: string;
 }
 
 export interface SignUpRequest {
@@ -36,9 +32,5 @@ export interface SignUpResult {
 
 export interface SignUpError {
   status: string;
-  errors: {
-    email?: string[];
-    username?: string[];
-    password?: string[];
-  };
+  message: string;
 }

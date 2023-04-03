@@ -25,7 +25,6 @@ function Home() {
 export default Home;
 
 const HomeContainer = styled.div`
-  padding-top: 32px;
   padding-bottom: 100px;
   div:last-child {
     display: flex;

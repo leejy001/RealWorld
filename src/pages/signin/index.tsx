@@ -1,28 +1,23 @@
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import { signinApi } from "../../api/sign";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
+import useSignInMutation from "../../hooks/sign/useSignInMutation";
+import ErrorForm from "../../components/ErrorForm";
+import { SignInError } from "../../types/sign";
 
 function SignIn() {
   const { routeTo } = useRouter();
-
-  const signInSubmitHandler = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const { data, mutate } = useSignInMutation();
+  const signInSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-
-    const signInResult = await signinApi({
+    mutate({
       user: {
         email: formData.get("email") as string,
         password: formData.get("password") as string
       }
     });
-
-    if (signInResult.status === "fail") return;
-
-    routeTo("-1");
   };
 
   return (
@@ -52,6 +47,9 @@ function SignIn() {
             Sign in
           </button>
         </SignInForm>
+        {data?.status === "fail" && (
+          <ErrorForm error={(data as SignInError)?.message} />
+        )}
       </SignInContianer>
     </Container>
   );

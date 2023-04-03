@@ -5,18 +5,20 @@ interface useIntersectionObserverProps {
   rootMargin?: string;
   threshold?: number;
   onIntersect: IntersectionObserverCallback;
+  enabled?: boolean;
 }
 
 const useIntersectionObserver = ({
   root,
   rootMargin = "10px",
   threshold = 0,
-  onIntersect
+  onIntersect,
+  enabled = true
 }: useIntersectionObserverProps) => {
   const [target, setTarget] = useState<HTMLElement | null | undefined>(null);
 
   useEffect(() => {
-    if (!target) return;
+    if (!target || !enabled) return;
 
     const observer: IntersectionObserver = new IntersectionObserver(
       onIntersect,
@@ -25,7 +27,7 @@ const useIntersectionObserver = ({
     observer.observe(target);
 
     return () => observer.unobserve(target);
-  }, [onIntersect, root, rootMargin, target, threshold]);
+  }, [onIntersect, root, rootMargin, target, threshold, enabled]);
 
   return { setTarget };
 };

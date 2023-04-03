@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getTagApi } from "../../../api/tag";
 import Spinner from "../../../components/Spinner";
+import useTagsQuery from "../../../hooks/default/useTagsQuery";
 
 interface TagProps {
   setTag: React.Dispatch<React.SetStateAction<string>>;
@@ -9,16 +9,11 @@ interface TagProps {
 
 function TagBar({ setTag }: TagProps) {
   const [scrollHeight, setScrollHeight] = useState(0);
-  const [tags, setTags] = useState<string[]>([]);
+  const { isLoading, data } = useTagsQuery();
 
   const onScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const getTagsInfo = useCallback(async () => {
-    const result = await getTagApi();
-    if (result?.tags) setTags(result?.tags);
-  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -26,25 +21,21 @@ function TagBar({ setTag }: TagProps) {
     });
   }, [scrollHeight]);
 
-  useEffect(() => {
-    getTagsInfo();
-  }, [getTagsInfo]);
-
   return (
     <TagBarContainer>
       <TagBarWrapper>
         <p>Popular Tags</p>
         <TagListWrapper>
-          {tags.length > 0 ? (
+          {isLoading ? (
+            <Spinner size={30} />
+          ) : (
             <>
-              {tags.map((item, index) => (
-                <li key={index} onClick={() => setTag(item)}>
+              {data?.map((item: string) => (
+                <li key={item} onClick={() => setTag(item)}>
                   {item}
                 </li>
               ))}
             </>
-          ) : (
-            <Spinner size={30} />
           )}
         </TagListWrapper>
         <TopButton

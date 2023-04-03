@@ -1,69 +1,47 @@
 import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import {
-  getArticleInfoApi,
-  postArticleApi,
-  putArticleApi
-} from "../../api/article";
 import Container from "../../components/Container";
 import { useRouter } from "../../hooks/useRouter";
-import { ArticleRequest } from "../../types/article";
-
-const initArticle = {
-  title: "",
-  description: "",
-  body: "",
-  tagList: []
-};
+import useCreateArticleMutation from "../../hooks/article/useCreateArticleMutation";
+import useEditArticleMutation from "../../hooks/article/useEditArticleMutation";
+import useArticleQuery from "../../hooks/article/useArticleQuery";
 
 function Editor() {
-  const { currentPath, routeTo } = useRouter();
+  const { currentPath } = useRouter();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [article, setArticle] = useState<ArticleRequest>(initArticle);
+  const [tagList, setTagList] = useState<string[]>([]);
   const [tag, setTag] = useState<string>("");
+  const { data } = useArticleQuery(currentPath.split("/")[2]);
+  const { mutate: createMutation } = useCreateArticleMutation();
+  const { mutate: editMutation } = useEditArticleMutation();
 
-  const getArticleInfo = useCallback(async () => {
-    const result = await getArticleInfoApi(currentPath.split("/")[2]);
+  const initStateHandler = useCallback(async () => {
+    if (data?.article) {
+      setTagList(data.article.tagList);
+      setIsEdit(true);
+    }
+  }, [data?.article]);
 
-    if (result === null) return;
-    setArticle({
-      title: result?.article.title,
-      description: result?.article.description,
-      body: result?.article.body,
-      tagList: result?.article.tagList
-    });
-    setIsEdit(true);
-  }, [currentPath]);
-
-  const articleSubmitHandler = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const articleSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     if (isEdit) {
-      const articlePutResult = await putArticleApi(currentPath.split("/")[2], {
+      editMutation({
+        slug: currentPath.split("/")[2],
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         body: formData.get("body") as string,
-        tagList: article.tagList
+        tagList: tagList
       });
-
-      if (articlePutResult.status === "success") {
-        routeTo(`/article/${articlePutResult.article?.slug}`);
-      }
     } else {
-      const articlePostResult = await postArticleApi({
+      createMutation({
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         body: formData.get("body") as string,
-        tagList: article.tagList
+        tagList: tagList
       });
-
-      if (articlePostResult.status === "success") {
-        routeTo(`/article/${articlePostResult.article?.slug}`);
-      }
     }
     return;
   };
@@ -76,26 +54,20 @@ function Editor() {
   const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      if (!article.tagList.includes(tag)) {
-        setArticle({ ...article, tagList: [...article.tagList, tag] });
+      if (!tagList.includes(tag)) {
+        setTagList([...tagList, tag]);
         setTag("");
       }
     }
   };
 
   const removeTagClickHandler = (target: string) => {
-    setArticle({
-      ...article,
-      tagList: article.tagList.filter((tag) => tag !== target)
-    });
+    setTagList(tagList.filter((tag) => tag !== target));
   };
 
   useEffect(() => {
-    setArticle(initArticle);
-    if (currentPath.split("/")[2]) {
-      getArticleInfo();
-    }
-  }, [getArticleInfo, currentPath]);
+    initStateHandler();
+  }, [initStateHandler]);
 
   return (
     <Container>
@@ -108,19 +80,19 @@ function Editor() {
           name="title"
           placeholder="Article Title"
           autoComplete="false"
-          defaultValue={article.title}
+          defaultValue={data?.article?.title}
         />
         <input
           type="text"
           name="description"
           placeholder="What's this article about?"
           autoComplete="false"
-          defaultValue={article.description}
+          defaultValue={data?.article?.description}
         />
         <textarea
           name="body"
           placeholder="Write your article (in markdown)"
-          defaultValue={article.body}
+          defaultValue={data?.article?.body}
         />
         <input
           type="text"
@@ -131,7 +103,7 @@ function Editor() {
           onKeyDown={onEnter}
         />
         <TagListWrapper>
-          {article.tagList?.map((item) => (
+          {tagList.map((item) => (
             <li key={item}>
               <span onClick={() => removeTagClickHandler(item)}>X</span>
               &nbsp;{item}

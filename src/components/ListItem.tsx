@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { favoriteApi, unfavoriteApi } from "../api/favorite";
 import { useRouter } from "../hooks/useRouter";
@@ -13,10 +13,8 @@ interface ArticleProps {
 
 function ListItem({ article }: ArticleProps) {
   const { routeTo } = useRouter();
-  const [isFavorited, setIsFavorited] = useState<boolean>(article.favorited);
-  const [favoriteCount, setFavoriteCount] = useState<number>(
-    article.favoritesCount
-  );
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
 
   const favoritedClickHandler = async (
     event: React.MouseEvent<HTMLButtonElement>
@@ -25,7 +23,7 @@ function ListItem({ article }: ArticleProps) {
     if (!getAccessTokenFromSessionStorage()) {
       return routeTo("/sign-in");
     }
-    if (article?.favorited) {
+    if (isFavorited) {
       const deleteRes = await unfavoriteApi(article.slug);
       if (deleteRes === "success") {
         setIsFavorited(false);
@@ -40,6 +38,11 @@ function ListItem({ article }: ArticleProps) {
     }
     return;
   };
+
+  useEffect(() => {
+    setIsFavorited(article.favorited);
+    setFavoriteCount(article.favoritesCount);
+  }, [article.favorited, article.favoritesCount]);
 
   return (
     <ListItemContainer>

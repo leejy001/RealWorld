@@ -14,10 +14,11 @@ export const getCommentsInfoApi = async (
   return null;
 };
 
-export const postCommentApi = async (
-  slug: string,
-  body: string
-): Promise<string> => {
+export const postCommentApi = async (data: {
+  slug: string;
+  body: string;
+}): Promise<string> => {
+  const { slug, body } = data;
   const postCommentRes = await fetchClient(`/articles/${slug}/comments`, {
     method: "POST",
     body: JSON.stringify({ comment: { body } })
@@ -29,10 +30,11 @@ export const postCommentApi = async (
   return "fail";
 };
 
-export const deleteCommentApi = async (
-  slug: string,
-  id: number
-): Promise<string> => {
+export const deleteCommentApi = async (data: {
+  slug: string;
+  id: number;
+}): Promise<string> => {
+  const { slug, id } = data;
   const deleteCommentRes = await fetchClient(
     `/articles/${slug}/comments/${id}`,
     { method: "DELETE" }

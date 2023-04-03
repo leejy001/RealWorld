@@ -20,7 +20,7 @@ function ArticleAuthor({
   favoritedClickHandler,
   followClickHandler
 }: ArticleAuthorProps) {
-  const { currentPath, routeTo } = useRouter();
+  const { currentPath, routeTo } = useRouter(true);
   const { mutate } = useDeleteArticleMutation();
 
   const deleteArticleClickHandler = () => {

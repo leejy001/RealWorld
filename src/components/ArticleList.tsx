@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
 import ListItem from "./ListItem";
@@ -10,7 +10,7 @@ interface ParentProps {
 }
 
 function ArticleList({ query }: ParentProps) {
-  const { isLoading, isFetching, data, fetchNextPage, hasNextPage } =
+  const { isLoading, data, fetchNextPage, hasNextPage, remove } =
     useArticlesQuery(query);
   const mergeArticles = useMemo(
     () => data?.pages.flatMap((page) => page.articles),
@@ -31,6 +31,10 @@ function ArticleList({ query }: ParentProps) {
     enabled: hasNextPage
   });
 
+  useEffect(() => {
+    remove();
+  }, [remove]);
+
   return (
     <ArticleListContainer>
       <ArticleListWrapper>
@@ -39,7 +43,7 @@ function ArticleList({ query }: ParentProps) {
             <ListItem key={index} article={item} />
           ))}
       </ArticleListWrapper>
-      <div ref={setTarget}>{isFetching && <Spinner size={50} />}</div>
+      <div ref={setTarget}>{isLoading && <Spinner size={50} />}</div>
     </ArticleListContainer>
   );
 }

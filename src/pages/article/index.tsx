@@ -11,6 +11,7 @@ import { useArticleUnfollowMutation } from "../../hooks/profile/useUnfollowMutat
 import useFavoriteMutation from "../../hooks/favorite/useFavoriteMutation";
 import useUnfavoriteMutation from "../../hooks/favorite/useUnfavoriteMutation";
 import useUserQuery from "../../hooks/user/useUserQuery";
+import Markdown from "../../components/Markdown";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
@@ -63,10 +64,10 @@ function Article() {
         </Container>
       </ArticleInfoBanner>
       <Container>
-        {isLoading ? (
-          <Spinner size={100} />
+        {!isLoading && data?.article ? (
+          <Markdown markdown={data?.article?.body} />
         ) : (
-          <ArticleDetail>{data?.article?.body}</ArticleDetail>
+          <Spinner size={100} />
         )}
         <ArticleTagList>
           {data?.article?.tagList.map((item, index) => (
@@ -118,12 +119,6 @@ const ArticleTitle = styled.p`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.FONT_WHITE};
   margin-bottom: 32px;
-`;
-
-const ArticleDetail = styled.p`
-  font-size: 20px;
-  margin: 32px 0px;
-  line-height: 1.4;
 `;
 
 const ArticleTagList = styled.ul`

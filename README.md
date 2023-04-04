@@ -86,6 +86,6 @@ yarn start
   - 페이지 하단의 댓글 섹션
   - 댓글 추가/삭제 기능
  - Profile 페이지(URL: /profile/:username, /profile/:username/favorites)
-  - 기본 사용자 정보 표시
-  - 본인의 프로필인 경우 프로필 수정 기능, 다른 사람인 경우 follow 기능
-  - 작성자가 작성한 article 또는 작성자가 즐겨찾는 기사로 채워진 article 목록
+   - 기본 사용자 정보 표시
+   - 본인의 프로필인 경우 프로필 수정 기능, 다른 사람인 경우 follow 기능
+   - 작성자가 작성한 article 또는 작성자가 즐겨찾는 기사로 채워진 article 목록

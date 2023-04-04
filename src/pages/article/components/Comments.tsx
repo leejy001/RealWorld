@@ -3,7 +3,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "../../../hooks/useRouter";
 import useCommentsQuery from "../../../hooks/comments/useCommentsQuery";
-import Spinner from "../../../components/Spinner";
 import useCreateCommentMutation from "../../../hooks/comments/useCreateCommentMutation";
 import useDeleteCommentMutation from "../../../hooks/comments/useDeleteCommentMutation";
 
@@ -21,7 +20,7 @@ interface ArticleProps {
 function Comments({ slug, userInfo }: ArticleProps) {
   const { routeTo } = useRouter();
   const [body, setBody] = useState<string>("");
-  const { isLoading, data } = useCommentsQuery(slug);
+  const { data } = useCommentsQuery(slug);
   const { mutate: createMutate } = useCreateCommentMutation();
   const { mutate: deleteMutate } = useDeleteCommentMutation();
 
@@ -61,48 +60,38 @@ function Comments({ slug, userInfo }: ArticleProps) {
         </CommentFormCardFooter>
       </CommentFormCard>
       <CommentsListWrapper>
-        {isLoading ? (
-          <Spinner size={70} />
-        ) : (
-          <>
-            {data?.comments.map((comment) => (
-              <CommentCard key={comment.id}>
-                <CommentCardBody>{comment.body}</CommentCardBody>
-                <CommentCardFooter>
-                  <CommentCardUserInfo>
-                    <img
-                      src={comment.author.image}
-                      alt="profile-img"
-                      width={20}
-                      height={20}
-                    />
-                    <CommentCardUserName
-                      onClick={() =>
-                        routeTo(`/profile/${comment.author.username}`)
-                      }
-                    >
-                      {comment.author.username}
-                    </CommentCardUserName>
-                    <CommentCardCreateAt>
-                      {comment.createdAt}
-                    </CommentCardCreateAt>
-                  </CommentCardUserInfo>
-                  {userInfo.username === comment.author.username && (
-                    <CommentDeleteButton
-                      onClick={() => deleteCommentClickHandler(comment.id)}
-                    >
-                      <Icon
-                        className="delete-comment"
-                        icon="mdi:trash"
-                        color="#b85c5c"
-                      />
-                    </CommentDeleteButton>
-                  )}
-                </CommentCardFooter>
-              </CommentCard>
-            ))}
-          </>
-        )}
+        {data?.comments.map((comment) => (
+          <CommentCard key={comment.id}>
+            <CommentCardBody>{comment.body}</CommentCardBody>
+            <CommentCardFooter>
+              <CommentCardUserInfo>
+                <img
+                  src={comment.author.image}
+                  alt="profile-img"
+                  width={20}
+                  height={20}
+                />
+                <CommentCardUserName
+                  onClick={() => routeTo(`/profile/${comment.author.username}`)}
+                >
+                  {comment.author.username}
+                </CommentCardUserName>
+                <CommentCardCreateAt>{comment.createdAt}</CommentCardCreateAt>
+              </CommentCardUserInfo>
+              {userInfo.username === comment.author.username && (
+                <CommentDeleteButton
+                  onClick={() => deleteCommentClickHandler(comment.id)}
+                >
+                  <Icon
+                    className="delete-comment"
+                    icon="mdi:trash"
+                    color="#b85c5c"
+                  />
+                </CommentDeleteButton>
+              )}
+            </CommentCardFooter>
+          </CommentCard>
+        ))}
       </CommentsListWrapper>
     </CommentsContainer>
   );

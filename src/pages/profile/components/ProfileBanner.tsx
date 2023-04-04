@@ -5,13 +5,12 @@ import { useRouter } from "../../../hooks/useRouter";
 import { useProfileFollowMutation } from "../../../hooks/profile/useFollowMutation";
 import { useProfileUnfollowMutation } from "../../../hooks/profile/useUnfollowMutation";
 import useProfileQuery from "../../../hooks/profile/useProfileQuery";
-import Spinner from "../../../components/Spinner";
 import useUserQuery from "../../../hooks/user/useUserQuery";
 
 function ProfileBanner() {
   const { currentPath, routeTo } = useRouter();
   const { data: user } = useUserQuery();
-  const { isLoading, data } = useProfileQuery(currentPath.split("/")[2]);
+  const { data } = useProfileQuery(currentPath.split("/")[2]);
   const { mutate: followMutate } = useProfileFollowMutation();
   const { mutate: unfollowMutate } = useProfileUnfollowMutation();
 
@@ -26,7 +25,7 @@ function ProfileBanner() {
 
   return (
     <ProfileBannerContainer>
-      {!isLoading && data?.profile ? (
+      {data?.profile && (
         <Container>
           <img
             src={data.profile.image}
@@ -57,8 +56,6 @@ function ProfileBanner() {
             </FollowButton>
           )}
         </Container>
-      ) : (
-        <Spinner size={100} />
       )}
     </ProfileBannerContainer>
   );
@@ -67,12 +64,6 @@ function ProfileBanner() {
 export default ProfileBanner;
 
 const ProfileBannerContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  min-height: 230px;
-  background-color: #f3f3f3;
-  padding: 32px 0px 16px;
   div:first-child {
     display: flex;
     gap: 8px;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Spinner from "../../../components/Spinner";
 import useTagsQuery from "../../../hooks/default/useTagsQuery";
 
 interface TagProps {
@@ -9,7 +8,7 @@ interface TagProps {
 
 function TagBar({ setTag }: TagProps) {
   const [scrollHeight, setScrollHeight] = useState(0);
-  const { isLoading, data } = useTagsQuery();
+  const { data } = useTagsQuery();
 
   const onScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,17 +25,11 @@ function TagBar({ setTag }: TagProps) {
       <TagBarWrapper>
         <p>Popular Tags</p>
         <TagListWrapper>
-          {isLoading ? (
-            <Spinner size={30} />
-          ) : (
-            <>
-              {data?.map((item: string) => (
-                <li key={item} onClick={() => setTag(item)}>
-                  {item}
-                </li>
-              ))}
-            </>
-          )}
+          {data?.map((item: string) => (
+            <li key={item} onClick={() => setTag(item)}>
+              {item}
+            </li>
+          ))}
         </TagListWrapper>
         <TopButton
           type="button"

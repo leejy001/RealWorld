@@ -4,7 +4,8 @@ import Banner from "./components/Banner";
 import FeedList from "./components/FeedList";
 import TagBar from "./components/TagBar";
 import { getAccessTokenFromSessionStorage } from "../../utils/accessTokenHandler";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import Spinner from "../../components/Spinner";
 
 function Home() {
   const [tag, setTag] = useState<string>(
@@ -16,7 +17,9 @@ function Home() {
       {!getAccessTokenFromSessionStorage() && <Banner />}
       <Container>
         <FeedList tag={tag} setTag={setTag} />
-        <TagBar setTag={setTag} />
+        <Suspense fallback={<Spinner size={30} />}>
+          <TagBar setTag={setTag} />
+        </Suspense>
       </Container>
     </HomeContainer>
   );

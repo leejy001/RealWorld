@@ -12,6 +12,7 @@ import useFavoriteMutation from "../../hooks/favorite/useFavoriteMutation";
 import useUnfavoriteMutation from "../../hooks/favorite/useUnfavoriteMutation";
 import useUserQuery from "../../hooks/user/useUserQuery";
 import Markdown from "../../components/Markdown";
+import { Suspense } from "react";
 
 function Article() {
   const { currentPath, routeTo } = useRouter();
@@ -94,7 +95,9 @@ function Article() {
               comments on this article.
             </p>
           ) : (
-            <Comments slug={currentPath.split("/")[2]} userInfo={user} />
+            <Suspense fallback={<Spinner size={100} />}>
+              <Comments slug={currentPath.split("/")[2]} userInfo={user} />
+            </Suspense>
           )}
         </CommentsWrapper>
       </Container>

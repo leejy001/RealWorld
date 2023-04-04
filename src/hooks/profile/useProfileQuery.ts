@@ -11,7 +11,8 @@ const useProfileQuery = (username: string) => {
         isUser: user?.username === data?.profile.username,
         ...data
       };
-    }
+    },
+    suspense: true
   });
 };
 

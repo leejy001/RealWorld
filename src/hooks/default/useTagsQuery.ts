@@ -6,7 +6,8 @@ const useTagsQuery = () => {
   return useQuery(["tags"], getTagApi, {
     select: (data: TagResult | null) => {
       return data?.tags;
-    }
+    },
+    suspense: true
   });
 };
 

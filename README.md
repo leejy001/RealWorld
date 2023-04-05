@@ -56,7 +56,7 @@ yarn start
 
 #  기능 개요
 예제 애플리케이션은 "Conduit"라는 소셜 블로깅 사이트(예: Medium.com 클론)입니다.  
-인증을 포함한 모든 요청에 대해 사용자 정의 API를 사용합니다. [ https://react-query-realworld.netlify.app ](https://conduit-leejy001.netlify.app/)에서 라이브 데모를 볼 수 있습니다.
+인증을 포함한 모든 요청에 대해 사용자 정의 API를 사용합니다. [conduit-leejy001](https://conduit-leejy001.netlify.app/)에서 라이브 데모를 볼 수 있습니다.
 
 **일반 기능:**
 - JWT를 통한 사용자 인증 (로그인/화원가입 페이지 + Setting 페이지의 로그아웃 버튼)

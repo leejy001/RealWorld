@@ -89,3 +89,5 @@ yarn start
    - 기본 사용자 정보 표시
    - 본인의 프로필인 경우 프로필 수정 기능, 다른 사람인 경우 follow 기능
    - 작성자가 작성한 article 또는 작성자가 즐겨찾는 기사로 채워진 article 목록
+
+### [더 자세한 내용을 보고싶다면? - 개발 위키](https://github.com/leejy001/RealWorld/wiki)
